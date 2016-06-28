@@ -212,7 +212,7 @@ object MathTools {
 
     /** The fastest way to get sample minimum and maximum (3n/2 comparisons).
       *
-      * @param sample
+      * @param sample data sample, each column is one realization of the random vector.
       * @return pair (min(sample),max(sample)).
       */
     final def extremeValues(sample:DenseVector[Double]):(Double,Double) = {
@@ -220,7 +220,7 @@ object MathTools {
         val n = sample.length
         var min = Double.MaxValue
         var max = Double.MinValue
-        var i=0;
+        var i=0
         while(2*i+1<n){
 
             val a = sample(2*i)

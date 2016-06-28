@@ -74,13 +74,12 @@ Added Histogram, empirical entropy and tests for same. Currently only for unifor
 [0,a].
 Both estimators fail miserably.
 
-Added faster version fo function f(x)=x*log(x). Not worht it since only 30% faster but x*Math.log(x)
-is definitely not the bottleneck,rather it seems to be the sorting in the Vasicek entropy estimator.
+Added faster version of function f(x)=x*log(x). Not worth since only 30% faster but x*Math.log(x)
+is definitely not the bottleneck, rather it seems to be the sorting in the Vasicek entropy estimator.
 
 But even the Vasicek entropy estimator is so fast that we cannot explain the slowness of the Radical ICA
-rotation search.
-We get 1000 entropies on samples of size 30000 in 7 seconds.
-The empirical estimator is 10 times faster in goog agreement of O(n*log(n)) versus O(n).
+rotation search. We get 1000 entropies on samples of size 30000 in 7 seconds.
+The empirical estimator is 10 times faster than that.
 
 
 #-----------------------------------------------------------------------------------
