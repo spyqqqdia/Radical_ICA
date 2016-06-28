@@ -67,9 +67,9 @@ Then extend the entropy test MathTests.entropyTest to more distributions.
 -------------
 
 RadicalICA:
-Add parameter to choose btween vasicek or empirical estimator.
+Add parameter to choose between Vasicek or empirical estimator.
 Suppress all angles less than 0.05 in RadicalICAtests.testCube.
-For this we need a paramter in Rotation.listRotationAngles.
+For this we need a parameter in Rotation.listRotationAngles.
 
 Time the rotation search both with Vasicek estimator and with the empirical one.
 Write LaTeX Readme.
@@ -79,3 +79,11 @@ Write LaTeX Readme.
 -------------
 
 Write LaTeX Readme.
+
+#-----------------------------------------------------------------------------------
+2016-06-28:|
+-------------
+
+Extend  RadicalICATests.testCube so as to take the distribution of the independent coordinates
+before the mixing rotation as a parameter. Rename the function, since the values will no longer be in a
+cube.

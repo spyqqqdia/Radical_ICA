@@ -16,7 +16,7 @@ object Runner {
 
     def main (args: Array[String]) {
 
-        System.out.println("\nRunner: starting...")
+        print("\nRunner: starting...")
 
         // unit tests
         if (runTests) {
@@ -31,9 +31,8 @@ object Runner {
 
         // ad hoc tests
         // radICATests.showPadding
-        //matrixFunctionTests.whiteningTest()
-        //MathTests.xLogxTest()
-        //MathTests.entropyTest()
+        // matrixFunctionTests.whiteningTest()
+        // MathTests.entropyTest()
 
 
         val dim = 20
@@ -41,7 +40,6 @@ object Runner {
         val doVasicek = false
         val doParallelSearch =true
         val verbose = true
-        //radICATests.testCube(3,false)
         radICATests.testCube(dim,doParallelSearch,precision,doVasicek,verbose)
 
 
