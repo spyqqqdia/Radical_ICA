@@ -32,6 +32,6 @@ The two entropy estimators have been tested on a variety of distributions as fol
 generated and the smaller sample padded to size 30000 as described in the original paper. The entropies of the samples are  
 then computed with both estimators and mean and variance of the estimate computed. These values are then compared with the  
 true entropy of the distribution generating the samples. In all cases tested the two estimators show similar performance,  
-see [results](../results/EntropyEstimation.csv). 
+see [results](github.com/spyqqqdia/Radical_ICA/tree/master/results/EntropyEstimation.csv).
 
 
