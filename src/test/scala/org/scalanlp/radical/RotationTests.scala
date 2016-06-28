@@ -41,55 +41,19 @@ class RotationTests extends TestCase {
         assertTrue(diff < 1e-10)
         System.out.print("passed.\n")
     }
-
-    /** Allocate a rotation and check if the inverse rotation matrix is computed correctly.
+    /** Allocate a rotation and check if the rotation matrix is orthogonal and its inverse
+      * computed correctly.
       * Rotation angles(i,j) are set to (i+j)/10.
       * Dimension of space in which we rotate is set to 20.
       */
-    def testRotationInverse = {
+    def testRotationConsistency = {
 
-        System.out.print("Doing RadicalTests.testRotationInverse: ")
-        val dim=20
-        val rot = new Rotation(dim)
-        (0 until dim).map( i => ((i+1) until dim).map(j => {
-            rot.addRotation(i,j,(i+j)/10.0)
-        }))
-        val M:DenseMatrix[Double] = rot.rotationMatrix
-        val M_inv :DenseMatrix[Double] = rot.rotationMatrixInverse
-        val Id:DenseMatrix[Double] = DenseMatrix.eye[Double](dim)
-
-        val RQ:DenseMatrix[Double] = M*M_inv
-        val QR:DenseMatrix[Double] = M_inv*M
-
-        val leftDiff = bn_max(bn_abs(Id-RQ))
-        val rightDiff = bn_max(bn_abs(Id-QR))
-
-        assertTrue(leftDiff<1e-8 & rightDiff < 1e-8)
-        System.out.print("passed.\n")
-    }
-    /** Allocate a rotation and check if the rotation matrix is orthogonal.
-      * Rotation angles(i,j) are set to (i+j)/10.
-      * Dimension of space in which we rotate is set to 20.
-      */
-    def testRotationIsOrthogonal = {
-
-        System.out.print("Doing RadicalTests.testRotationIsOrthogonal: ")
+        print("Testing consistency of rotation: ")
         val dim = 20
         val rot = new Rotation(dim)
         (0 until dim).map( i => ((i+1) until dim).map(j => {
             rot.addRotation(i,j,(i+j)/10.0)
         }))
-        val M:DenseMatrix[Double] = rot.rotationMatrix
-        val Mt :DenseMatrix[Double] = M.t     // transpose
-        val Id:DenseMatrix[Double] = DenseMatrix.eye[Double](dim)
-
-        val RQ:DenseMatrix[Double] = M*Mt
-        val QR:DenseMatrix[Double] = Mt*M
-
-        val leftDiff = bn_max(bn_abs(Id-RQ))
-        val rightDiff = bn_max(bn_abs(Id-QR))
-
-        assertTrue(leftDiff<1e-8 & rightDiff < 1e-8)
-        System.out.print("passed.\n")
+        rot.selfTest
     }
 }

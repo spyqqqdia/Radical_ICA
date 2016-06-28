@@ -1,14 +1,10 @@
 package org.scalanlp.radical
 
 import scala.collection.mutable.ListBuffer
-import breeze.linalg.{
-DenseMatrix, DenseVector, eigSym, svd,
-max => bn_max, sum, Axis
-}
-import breeze.numerics.{
-abs => bn_abs, sqrt => bn_sqrt
-}
+import breeze.linalg.{Axis, DenseMatrix, DenseVector, eigSym, sum, svd, max => bn_max}
+import breeze.numerics.{abs => bn_abs, sqrt => bn_sqrt}
 import Utils._
+import org.junit.Assert._
 
 
 
@@ -36,7 +32,8 @@ class Rotation(val dim:Int) {
     def addRotation(i:Int,j:Int,phi:Double):Unit = {
 
         assert(0<=i && 0<=j && i<dim && j<dim && i!=j)
-        ((i,j,phi)) +=: jacobiRotations     // prepend to get them in reverse order
+        // prepend to get them in reverse order for computation of the inverse
+        ((i,j,phi)) +=: jacobiRotations
         val a = Math.cos(phi)
         val b = Math.sin(phi)
 
@@ -70,20 +67,45 @@ class Rotation(val dim:Int) {
         val vs:Vector[String] = rotations.map(t => "angle("+t._1+","+t._2+")="+MathTools.round(t._3,4)+"\n").toVector
         vs.foldLeft("\n")((s1:String,s2:String)=>s1+s2)
     }
+
+    /** Inverse of the rotation matrix, alternative computation. Because of orthogonality
+      * the inverse is simply the transpose so this method is redundant. It's useful for consistency checks
+      * though.
+      *
+      * @return
+      */
     def rotationMatrixInverse:DenseMatrix[Double]= {
 
         val rotInv = new Rotation(dim)
+        // this works only since jacobiRotations contains them in reverse order
         jacobiRotations.map(t => rotInv.addRotation(t._1,t._2,-t._3))
         rotInv.rotationMatrix
     }
 
    /**
-    * Checks if the rotation matrix is orthogoanl
+    * Checks if the rotation matrix is orthogonal and if the inverse matrix is computed correctly.
     */
     def selfTest:Boolean = {
 
         val I = DenseMatrix.eye[Double](dim)
-        apply() == I
+        val R =rotationMatrix
+        val Q :DenseMatrix[Double] = R.t     // transpose
+
+        var leftDiff = bn_max(bn_abs(I-R*Q))
+        var rightDiff = bn_max(bn_abs(I-Q*R))
+        assert(
+            leftDiff<1e-8 & rightDiff < 1e-8,
+            "Rotation matrix is not orthogonal."
+        )
+        val R_inv = rotationMatrixInverse
+        leftDiff = bn_max(bn_abs(I-R*R_inv))
+        rightDiff = bn_max(bn_abs(I-R_inv*R))
+        assert(
+            leftDiff<1e-8 & rightDiff < 1e-8,
+            "Inverse of rotation matrix not correct."
+        )
+        print("passed.\n")
+        true
     }
 }
 

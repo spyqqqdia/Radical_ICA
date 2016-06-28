@@ -61,11 +61,11 @@ object MathTools {
       */
     def entropyUniform(a:Double) = Math.log(a)
     /**
-      * Entropy of the uniform distribution on [0,a].
+      * Variance of the uniform distribution on [0,a].
       */
     def varianceUniform(a:Double) = a*a/12
     /**
-      * Entropy of the uniform distribution on [0,a].
+      * Mean of the uniform distribution on [0,a].
       */
     def meanUniform(a:Double) = a/2
 
@@ -89,13 +89,13 @@ object MathTools {
       */
     def entropyExponential(lambda:Double) = 1-Math.log(lambda)
     /**
-      * Entropy of the Exponential distribution \[E(\lambda)\] (mean is \[1/\lambda\]).
+      * Variance of the Exponential distribution \[E(\lambda)\] (mean is \[1/\lambda\]).
       *
       * @param lambda: rate
       */
     def varianceExponential(lambda:Double) = 1.0/(lambda*lambda)
     /**
-      * Entropy of the Exponential distribution \[E(\lambda)\] (mean is \[1/\lambda\]).
+      * Mean of the Exponential distribution \[E(\lambda)\] (mean is \[1/\lambda\]).
       *
       * @param lambda: rate
       */

@@ -21,8 +21,7 @@ object Runner {
         // unit tests
         if (runTests) {
             rotationTests.testBasicRotation
-            rotationTests.testRotationInverse
-            rotationTests.testRotationIsOrthogonal
+            rotationTests.testRotationConsistency
 
             matrixFunctionTests.testSymmetry
             matrixFunctionTests.testSymEigVal
