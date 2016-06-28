@@ -87,3 +87,5 @@ Write LaTeX Readme.
 Extend  RadicalICATests.testCube so as to take the distribution of the independent coordinates
 before the mixing rotation as a parameter. Rename the function, since the values will no longer be in a
 cube.
+
+__BUG__ in RadicalICATests.testCube (see LOG.txt) needs to be fixed.

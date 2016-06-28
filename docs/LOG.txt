@@ -130,5 +130,17 @@ Fixed up scala doc and other supporting documentation a little.
 
 Status: compiles, all tests run, no known bugs.
 
+#-----------------------------------------------------------------------------------
+2016-06-28:|
+-------------
+
+__BUG__ RadicalICATests.testCube
+reports failure even though the angles seem to fit the test condition.
+The reason is that there can be more than one rotation in a coordinate pair (i,j): with a big angle
+in the first sweep and another one with a negligible angle in the second sweep.
+
+The second angle will cause the test to fail if the angle should be big.
+The test does not take this into account properly.
+
 
 

@@ -27,7 +27,8 @@ class RadicalICATests {
         val paddedData = RadicalICA.pad(data,3,0.1);
         System.out.println(MathTools.applyFcn(paddedData,(u:Double)=>MathTools.round(u,2)));
     }
-    /** Data (sample size 1000, padded sample size 40*1000) are uniformly distributed in a d-dimensional cube [-a,a]^d
+    /** Data (sample size 1000, padded sample size 40*1000) are uniformly distributed in a d-dimensional cube
+      * [-a,a]x[-a,a]x...x[-a,a]
       * (even dimension d) where a=sqrt(3) so that the data are white.
       *
       * The data are then rotated by -0.7 radians in non interacting dimensions (0,1),(2,3),...(d-2,d-1)
@@ -104,12 +105,15 @@ class RadicalICATests {
 
         // go through the list of Jacobi rotations of W to asses pass/fail
         val jacobiRotations:ListBuffer[(Int,Int,Double)]  = W.jacobiRotations
-        var pass = true
-        jacobiRotations.filter(t => t._1%2==0 & t._2==1+t._1).map(t => if(Math.abs(t._3-0.7)>precision) pass=false)
-        // further checks only if passed so far
-        if(pass) jacobiRotations.filter(t => !(t._1%2==0 & t._2==1+t._1)).map(t => if(Math.abs(t._3)>precision) pass=false)
 
-        System.out.println(if(pass) "Test passed." else "Test failed")
+        // list of test results true/false
+        val results = jacobiRotations.map(
+            t => if(t._1%2==0 & t._2==1+t._1) Math.abs(t._3-0.7)<=precision else Math.abs(t._3)<=precision
+        )
+        // did all of them pass
+        val pass = results.foldLeft(true)((a:Boolean,b:Boolean)=>a&b)
+
+        println((if(pass) "Test passed" else "Test failed")+" with precision "+precision+".")
         if(verbose){
             System.out.println("\nOptimal rotation found:")
             System.out.print(W.listRotationAngles(precision))

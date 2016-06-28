@@ -35,7 +35,7 @@ object Runner {
         // MathTests.entropyTest()
 
 
-        val dim = 20
+        val dim = 10
         val precision = 0.08
         val doVasicek = false
         val doParallelSearch =true
