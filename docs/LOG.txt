@@ -1,0 +1,135 @@
+
+#-----------------------------------------------------------------------------------
+2016-06-03:|
+-------------
+
+MatrixFunction with data whitening imported from csbreeze.
+JUnit tests for MatrixFunction and Rotation implemented.
+
+Status: compiles, all tests pass.
+
+
+#-----------------------------------------------------------------------------------
+2016-06-04:|
+-------------
+
+Completed the RadicalICA class. Computes optimal rotation in the constructor. Untested.
+Status: compiles, no new tests added.
+Added test but needs to be beefed up to automatically check if the computed rotation does what
+it is supposed to do.
+
+#-----------------------------------------------------------------------------------
+2016-06-04-A:|
+---------------
+
+Polished comments, RadicalICA: some variables renamed.
+MathTools: rounding functions for vectors and matrices.
+
+#-----------------------------------------------------------------------------------
+2016-06-12-A:|
+---------------
+
+Added a parameter to class RadicalICA to turn off data whitening.
+The reason is that the whitening matrix introduces an unknown rotation and for testing we
+need to enforce a known demixing rotation.
+
+Even if the covariance matrix of the data is close to the identity matrix (data nearly white)
+the whitening matrix can be far from the identity matrix, it is only close to orthogonal, and can
+thus introduce a sgnificant rotation.
+
+See MatrixFunctionTests.whiteningTest.
+
+
+Status: compiles and passes all tests.
+On the test RadicalICATests.testCube the algorithm frequently misses one and sometimes two of the rotations
+in the white data which it has to undo. Unclear why. The parameter sigmaPad can range from hundreds to a couple
+of mean spacings in the ordered sample without much influence.
+
+
+#-----------------------------------------------------------------------------------
+2016-06-18:|
+-------------
+
+RadicalICA:
+put the angle search for a fixed coordinate pair (i,j) in a separate member function.
+Added parallel version RadicalICA::findOptimalRotationPar  of the search for the optimal
+rotation angle.
+
+Utils: timer added.
+
+#-----------------------------------------------------------------------------------
+2016-06-19:|
+-------------
+
+Fixed problem with waiting for future results.
+Fixed flaw in reporting contrast function decrease and loop control.
+
+
+#-----------------------------------------------------------------------------------
+2016-06-22:|
+-------------
+
+Moved entropy computation to MathTools.
+Added Histogram, empirical entropy and tests for same. Currently only for uniform distribution on
+[0,a].
+Both estimators fail miserably.
+
+Added faster version fo function f(x)=x*log(x). Not worht it since only 30% faster but x*Math.log(x)
+is definitely not the bottleneck,rather it seems to be the sorting in the Vasicek entropy estimator.
+
+But even the Vasicek entropy estimator is so fast that we cannot explain the slowness of the Radical ICA
+rotation search.
+We get 1000 entropies on samples of size 30000 in 7 seconds.
+The empirical estimator is 10 times faster in goog agreement of O(n*log(n)) versus O(n).
+
+
+#-----------------------------------------------------------------------------------
+2016-06-22A:|
+--------------
+
+Entropy is fixed. Test works but padding does not work for exponential distribution.
+
+#-----------------------------------------------------------------------------------
+2016-06-23:|
+--------------
+
+MathTools: hacked in methods to compute entropy, mean  and variance of various distributions
+(Uniform, Gaussian, Exponential, Gamma, Beta).
+
+MathTests: added Gamma and Beta distribution to ::entropyTest, print test results in csv format.
+Should really write this to file.
+Result: empirical estimator is always as good as the Vasicek one but 10 times faster.
+
+Status: compiles and all tests run.
+
+Added new folder results: the results of MathTests.entropyTest are in it as .csv, .ods and .odb
+files.
+
+#-----------------------------------------------------------------------------------
+2016-06-24:|
+-------------
+
+BUG detected in RadicalICA::findOptimalRotation,findOptimalRotationPar
+which accounts for the fact that the algorithm missed some of the rotations in the RadicalICATests.testCube.
+Fixed. Now all rotations are found all the time.
+
+Changed some function signatures in RadicalICA, the entropy estimator is now a parameter of the class
+(constructor).
+Rewrote RadicalICATests.testCube so that it works in all even dimensions.
+Scaladoc generated.
+
+Status: compiles, all tests run, no known bugs.
+
+#-----------------------------------------------------------------------------------
+2016-06-26:|
+-------------
+
+Improved the test RadicalICATests so that it checks for pass fail automatically.
+Added parameters precision and a switch to turn off the test using the Vasicek estimator (too slow in
+high dimension).
+Fixed up scala doc and other supporting documentation a little.
+
+Status: compiles, all tests run, no known bugs.
+
+
+

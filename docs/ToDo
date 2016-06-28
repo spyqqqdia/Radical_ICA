@@ -1,0 +1,81 @@
+
+#----------------------------------------------------------------------------
+2016-06-03:|
+-------------
+
+Keep working on class RadicalICA.
+Next we need to implement the Vasicek independence measure.
+
+
+#----------------------------------------------------------------------------
+2016-06-04:|
+-------------
+
+Add a test where uniformly distributed data in a 4 dimensional cube are rotated 45 degrees
+in dimensions (1,2), (1,3), (2,3), (2,4), then check if the optimal rotation reverses this.
+
+Test RadicalICATests.testCube added and goes through
+but still needs to be checked if the computed rotation does what it is supposed to do.
+
+But note: in the whitening stage the data are already scaled and rotated so we must take the rotation
+in the whitening stage into account when we try to determine what the optimal rotation should be.
+
+So it would be best to test the algorithm on nonpadded, white data and for this we need to add a
+parameter doWhiten to the function RadicalICA.findOptimalRotation.
+
+
+#-----------------------------------------------------------------------------------
+2016-06-18:|
+-------------
+
+RadicalICA:
+the parallel version RadicalICA::findOptimalRotationPar  of the search for the optimal
+rotation angle does not work, seems like iteration over the futures with for comprehension
+does not wait for the futures to complete.
+
+#-----------------------------------------------------------------------------------
+2016-06-19:|
+-------------
+
+When reporting the rotation angles in the test filter the angles so that only angles > 0.05 are shown.
+This needs functionality in the class Rotation.
+Implement methods to query the rotation angles or simply provide the list of angles so that they can be queried
+by the client.
+
+Making the tests of RadicalICA return Boolean:
+just check if the necessary angles have been found to within a set precision and all other angles are small.
+
+
+#-----------------------------------------------------------------------------------
+2016-06-22:|
+-------------
+
+Find out why the rotation search in Radical ICA is so slow. The Vasicek entropy estimator is not at fault,
+see Log.txt.
+Why does the entropyTest fail so badly, is the theoretical entropy wrong?
+
+#-----------------------------------------------------------------------------------
+2016-06-22A:|
+--------------
+
+Entropy is fixed. Add theoretical entropies to MathTools, also for Gamma, Beta distribution.
+Need digamma, B(a,b) special functions.
+Then extend the entropy test MathTests.entropyTest to more distributions.
+
+#-----------------------------------------------------------------------------------
+2016-06-23:|
+-------------
+
+RadicalICA:
+Add parameter to choose btween vasicek or empirical estimator.
+Suppress all angles less than 0.05 in RadicalICAtests.testCube.
+For this we need a paramter in Rotation.listRotationAngles.
+
+Time the rotation search both with Vasicek estimator and with the empirical one.
+Write LaTeX Readme.
+
+#-----------------------------------------------------------------------------------
+2016-06-24:|
+-------------
+
+Write LaTeX Readme.

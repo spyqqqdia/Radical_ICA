@@ -1,0 +1,154 @@
+####-----Cube rotation test with empirical entropy estimator-----####
+
+RadicalICA: computing optimal rotation, parallelized.
+
+Contrast function at start: 8.38
+Sweep 0: contrast function = 7.72, decrease (%) = -7.89
+Sweep 1: contrast function = 7.71, decrease (%) = -0.07
+
+Optimal rotation found:
+
+angle(4,5)=0.7068
+angle(2,3)=0.7068
+angle(0,1)=0.6911
+
+Execution time: 1641ms
+
+
+RadicalICA: computing optimal rotation, parallelized.
+
+Contrast function at start: 8.35
+Sweep 0: contrast function = 7.71, decrease (%) = -7.6
+Sweep 1: contrast function = 7.71, decrease (%) = -0.02
+
+Optimal rotation found:
+
+angle(4,5)=0.6911
+angle(2,3)=0.6754
+angle(0,1)=0.7068
+
+Execution time: 1050ms
+
+
+RadicalICA: computing optimal rotation, parallelized.
+
+Contrast function at start: 8.32
+Sweep 0: contrast function = 7.71, decrease (%) = -7.27
+Sweep 1: contrast function = 7.71, decrease (%) = -0.03
+
+Optimal rotation found:
+
+angle(4,5)=0.7068
+angle(2,3)=0.7068
+angle(0,1)=0.6911
+
+Execution time: 1049ms
+
+
+RadicalICA: computing optimal rotation, parallelized.
+
+Contrast function at start: 8.41
+Sweep 0: contrast function = 7.73, decrease (%) = -8.09
+Sweep 1: contrast function = 7.73, decrease (%) = -0.02
+
+Optimal rotation found:
+
+angle(4,5)=0.6911
+angle(2,3)=0.7068
+angle(0,1)=0.6911
+
+Execution time: 1018ms
+
+
+RadicalICA: computing optimal rotation, parallelized.
+
+Contrast function at start: 8.39
+Sweep 0: contrast function = 7.74, decrease (%) = -7.78
+Sweep 1: contrast function = 7.73, decrease (%) = -0.06
+
+Optimal rotation found:
+
+angle(4,5)=0.7068
+angle(2,3)=0.7068
+angle(0,1)=0.6911
+
+Execution time: 1097ms
+
+
+####-----Cube rotation test with Vasicek entropy estimator-----####
+
+RadicalICA: computing optimal rotation, parallelized.
+
+Contrast function at start: 8.24
+Sweep 0: contrast function = 7.63, decrease (%) = -7.39
+Sweep 1: contrast function = 7.63, decrease (%) = -0.03
+
+Optimal rotation found:
+
+angle(4,5)=0.7068
+angle(2,3)=0.6911
+angle(0,1)=0.6911
+
+Execution time: 15471ms
+
+
+RadicalICA: computing optimal rotation, parallelized.
+
+Contrast function at start: 8.3
+Sweep 0: contrast function = 7.66, decrease (%) = -7.64
+Sweep 1: contrast function = 7.66, decrease (%) = -0.02
+
+Optimal rotation found:
+
+angle(4,5)=0.6911
+angle(2,3)=0.7068
+angle(0,1)=0.7225
+
+Execution time: 15315ms
+
+
+RadicalICA: computing optimal rotation, parallelized.
+
+Contrast function at start: 8.29
+Sweep 0: contrast function = 7.65, decrease (%) = -7.67
+Sweep 1: contrast function = 7.64, decrease (%) = -0.09
+
+Optimal rotation found:
+
+angle(1,4)=-0.0471
+angle(4,5)=0.6911
+angle(2,3)=0.7068
+angle(0,1)=0.7068
+
+Execution time: 15354ms
+
+
+RadicalICA: computing optimal rotation, parallelized.
+
+Contrast function at start: 8.27
+Sweep 0: contrast function = 7.64, decrease (%) = -7.57
+Sweep 1: contrast function = 7.64, decrease (%) = -0.04
+
+Optimal rotation found:
+
+angle(4,5)=0.6911
+angle(2,3)=0.7068
+angle(0,1)=0.7068
+
+Execution time: 15230ms
+
+
+RadicalICA: computing optimal rotation, parallelized.
+
+Contrast function at start: 8.29
+Sweep 0: contrast function = 7.67, decrease (%) = -7.51
+Sweep 1: contrast function = 7.67, decrease (%) = -0.03
+
+Optimal rotation found:
+
+angle(4,5)=0.7068
+angle(2,3)=0.6911
+angle(0,1)=0.6911
+
+Execution time: 15184ms
+
