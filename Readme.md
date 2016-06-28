@@ -1,19 +1,11 @@
-and forces us to Title:  Linux Administration
-CSS:    css/bootstrap_min.css
-CSS:    css/tiny.css
-Author: Michael J. Meyer  
-Date:   June 24, 2016
-
-
-
 #Radical ICA#
 
 This project implements the independent component analysis (`ICA`) algorithm using Scala 2.11.8 and JRE 1.8.0_76 with IntelliJ 2016.1.2.   
 Original authors of the algorithm: Eric G. Learned-Miller, John W. Fisher III.
  
-* [Introduction](radical_ica.pdf)
-* [Radical ICA, original paper](RadicalICA_MilFish.pdf)
-* [Scaladoc](index.html)
+* [Introduction](docs/radical_ica.pdf)
+* [Radical ICA, original paper](docs/RadicalICA_MilFish.pdf)
+* [Scaladoc](docs/index.html)
 * [Prof. Learned-Miller, homepage](https://people.cs.umass.edu/~elm/)
 * [Prof. Learned-Miller, R, Matlab code](https://people.cs.umass.edu/~elm/papers_by_code.html)
 * [Radical ICA hompage at umass](https://people.cs.umass.edu/~elm/ICA/)
