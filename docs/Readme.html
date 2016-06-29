@@ -17,7 +17,7 @@ Original authors of the algorithm: Eric G. Learned-Miller, John W. Fisher III.</
 
 <ul>
 <li><a href="radical_ica.pdf">Introduction</a></li>
-<li><a href="RadicalICA_MilFish.pdf">Radical ICA, original paper</a></li>
+<li><a href="https://people.cs.umass.edu/~elm/papers/learned-miller03a.pdf">Radical ICA, original paper</a></li>
 <li><a href="index.html">Scaladoc</a></li>
 <li><a href="https://people.cs.umass.edu/~elm/">Prof. Learned-Miller, homepage</a></li>
 <li><a href="https://people.cs.umass.edu/~elm/papers_by_code.html">Prof. Learned-Miller, R, Matlab code</a></li>
@@ -47,8 +47,12 @@ is more than 10 times faster (processor: core i5 5765C with 128MB L3 cache).</p>
 <p>The two entropy estimators have been tested on a variety of distributions as follows: 1000 samples of size 30000 and 3000 are<br/>
 generated and the smaller sample padded to size 30000 as described in the original paper. The entropies of the samples are<br/>
 then computed with both estimators and mean and variance of the estimate computed. These values are then compared with the<br/>
-true entropy of the distribution generating the samples. In all cases tested the two estimators show similar performance,<br/>
-see <a href="../results/EntropyEstimation.csv">results</a>. </p>
+true entropy of the distribution generating the samples. In the test cases the two estimators show similar performance,
+see <a href="../results/EntropyEstimation.csv">results</a>.</p>
+
+<p>However there are cases where the Vasicek estimator is superior and the current implementation can be improved so that
+it adapts itself to the distribution (Professor Learned-Miller, personal communication) and is fast when this is appropriate
+and slow when needed. This remains to be implemented.</p>
 
 </body>
 </html>

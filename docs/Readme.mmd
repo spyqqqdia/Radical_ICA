@@ -12,7 +12,7 @@ This project implements the independent component analysis (`ICA`) algorithm usi
 Original authors of the algorithm: Eric G. Learned-Miller, John W. Fisher III.
  
 * [Introduction](radical_ica.pdf)
-* [Radical ICA, original paper](RadicalICA_MilFish.pdf)
+* [Radical ICA, original paper](https://people.cs.umass.edu/~elm/papers/learned-miller03a.pdf)
 * [Scaladoc](index.html)
 * [Prof. Learned-Miller, homepage](https://people.cs.umass.edu/~elm/)
 * [Prof. Learned-Miller, R, Matlab code](https://people.cs.umass.edu/~elm/papers_by_code.html)
@@ -39,7 +39,11 @@ is more than 10 times faster (processor: core i5 5765C with 128MB L3 cache).
 The two entropy estimators have been tested on a variety of distributions as follows: 1000 samples of size 30000 and 3000 are  
 generated and the smaller sample padded to size 30000 as described in the original paper. The entropies of the samples are  
 then computed with both estimators and mean and variance of the estimate computed. These values are then compared with the  
-true entropy of the distribution generating the samples. In all cases tested the two estimators show similar performance,  
-see [results](../results/EntropyEstimation.csv). 
+true entropy of the distribution generating the samples. In the test cases the two estimators show similar performance,
+see [results](../results/EntropyEstimation.csv).
+
+However there are cases where the Vasicek estimator is superior and the current implementation can be improved so that
+it adapts itself to the distribution (Professor Learned-Miller, personal communication) and is fast when this is appropriate
+and slow when needed. This remains to be implemented.
 
 
