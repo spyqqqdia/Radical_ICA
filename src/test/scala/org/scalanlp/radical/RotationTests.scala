@@ -56,4 +56,6 @@ class RotationTests extends TestCase {
         }))
         rot.selfTest
     }
+
+
 }

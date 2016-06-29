@@ -107,6 +107,26 @@ class Rotation(val dim:Int) {
         print("passed.\n")
         true
     }
+    /** Note that J(i,j,alpha)*J(i,j,beta)=J(i,j,alpha+beta). This method reduces the list of Jacobi rotations
+      * in this rotation applying this equation until each coordinate pair (i,j) occurs only one.
+      * No guarantees are given about the order in which the resulting Jacobi rotations are applied.
+      *
+      * WARNING: in general the resulting rotation is only guaranteed to be equivalent to this rotation
+      * (same rotation matrix) if all the Jacobi rotations in this rotation _commute_ pairwise.
+      *
+      * @return
+      */
+    def reduced:Rotation = {
+
+        val reducedJacobiRotations:Iterable[(Int,Int,Double)] = jacobiRotations.groupBy(t=>(t._1,t._2)).map({
+
+            case ((i,j),rotationList) => (i,j,rotationList.map(J=>J._3).sum)
+        })
+        val rot = new Rotation(dim)
+        val it = reducedJacobiRotations.iterator
+        while(it.hasNext){ val J = it.next; rot.addRotation(J._1,J._2,J._3); }
+        rot
+    }
 }
 
 

@@ -142,5 +142,13 @@ in the first sweep and another one with a negligible angle in the second sweep.
 The second angle will cause the test to fail if the angle should be big.
 The test does not take this into account properly.
 
+#-----------------------------------------------------------------------------------
+2016-06-29:|
+-------------
+
+Rotation: added method to reduce mutiple rotations in the same coordinate plane.
+With that fixed up the BUG in RadicalICATests.testCube above.
+
+
 
 

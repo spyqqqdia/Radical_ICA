@@ -89,3 +89,9 @@ before the mixing rotation as a parameter. Rename the function, since the values
 cube.
 
 __BUG__ in RadicalICATests.testCube (see LOG.txt) needs to be fixed.
+
+#-----------------------------------------------------------------------------------
+2016-06-29:|
+-------------
+
+Speed up the Vasicek estimator using a bin sort. Try coalescing bins until they have similar bin counts.

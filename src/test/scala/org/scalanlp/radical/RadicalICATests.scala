@@ -103,8 +103,11 @@ class RadicalICATests {
         Timer.stop
         System.out.println(Timer.report)
 
+        // since the jacobi rotations in this example commute pairwise, we can reduce the rotation
+        // to eliminate multiple rotations in the same coordinate plane (i,j)
+        val V:Rotation = W.reduced
         // go through the list of Jacobi rotations of W to asses pass/fail
-        val jacobiRotations:ListBuffer[(Int,Int,Double)]  = W.jacobiRotations
+        val jacobiRotations:ListBuffer[(Int,Int,Double)]  = V.jacobiRotations
 
         // list of test results true/false
         val results = jacobiRotations.map(
