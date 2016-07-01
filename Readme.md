@@ -1,9 +1,3 @@
-and forces us to Title:  Linux Administration
-CSS:    css/bootstrap_min.css
-CSS:    css/tiny.css
-Author: Michael J. Meyer  
-Date:   June 24, 2016
-
 
 
 #Radical ICA#
@@ -42,7 +36,10 @@ are  then computed with both estimators and mean and variance of the estimate co
 the true entropy of the distribution generating the samples. In the test cases the two estimators show similar performance,
 see [results](../results/EntropyEstimation.csv).
 
-However there are cases where the Vasicek estimator is superior and the current implementation can be improved so that
+However examples of distributions with samples can easily be constructed where the entropy is arbitrarily close to zero whereas
+the naive empirical estimate is arbitraily large (see introduction).
+
+The Vasicek estimator is then superior and the current implementation can be improved so that
 it adapts itself to the distribution (bin sorting, Professor Learned-Miller, personal communication) and is fast when
 this is appropriate and slow when needed. This remains to be implemented.
 

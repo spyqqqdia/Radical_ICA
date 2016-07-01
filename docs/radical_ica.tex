@@ -94,7 +94,7 @@ ICA algorithms minimize this contrast function as a function of the rotation $Q$
 rotations, a complicated high dimensional manifold. Gradient search methods are liable to get stuck at a
 local minimum.
 
-The \textit{Radical ICA} algorithm, see \cite{MilFish} (included in docs/) notes that each rotation
+The \textit{Radical ICA} algorithm, see \cite{MilFish} notes that each rotation
 $Q$ can be written as a product of \textit{Jacobi rotations} $J(i,j,\phi)$:\\
 the counterclockwise rotation in the coordinate plane spanned by the standard unit vectors $e_j$ and $e_j$ 
 (coordinate planes in coordinates $i$, $j$). For a proof see Remark (A) below.
@@ -191,6 +191,42 @@ by such a rotation).
 
 In other words: the rotation $Q$ is unique only if at most one component $Z_j$ is Gaussian. For the practical
 application of the algorithm this is not very relevant since a contrast function minimizing rotation is always found.
+
+\medskip\noindent
+(E) The Vasicek estimator is better than a naive empirical estimator based on a histogram with equal width bins
+if the values of the random sample are unevenly distributed (densely clustered). Note that the naive empirical
+distribution derived from the histogram (step function density) is a mixture of uniform distributions in the 
+intervals on which the bins are based but the sample values need not be uniform in these intervals at all.
+In that case one cannot expect a histogram to yield a good representation of the density of the distribution.
+
+In the Vasicek estimator this problem is less severe since the clustering is taken into account naturally by
+considering the gaps in the ordered sample. For definiteness consider a sample of size $n$ from the distribution
+$$
+P=\frac{1}{2}Unif(0,1)+\frac{1}{2}Unif(I)\quad\text{where }I=\left[0,1/n^2\right].
+$$
+with density $f=\frac{1}{2}\big(1+n^21_I)$.
+
+Since practically no draws from the $Unif(0,1)$ distribution fall into the intervall $I$, the Vasicek
+estimate of the entropy of the mixture is close to the average of the estimates for the two distributions 
+which is close
+to 
+$$
+\frac{1}{2}\left[Entropy(Unif(0,1))+Entropy(Unif(I))\right]
+$$
+which in turn is close to the true entropy as can easily be verified by direct computation. 
+
+On the other hand the histogram with bins of equal width $1/\sqrt{n}$ sees half
+the sample falling into the first bin $J=[0,1/\sqrt{n})$ and the other half uniformly in $[0,1]$ so it believes
+the distribution to be the mixture $\tfrac{1}{2}Unif(0,1)+\tfrac{1}{2}Unif(J)$ and estimates the entropy accordingly.
+This entropy diverges from the true entropy in unbounded fashion, as $n\uparrow\infty$.
+
+However it is a problem is that sorting to obtain the ordered sample is very expensive. A solution is to apply a bin sort 
+that is fast for uniformly distributed values and slow only when the values are highly clustered in which case there are no 
+fast solutions at all. 
+
+
+
+
 
 
 
