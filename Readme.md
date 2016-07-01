@@ -36,8 +36,8 @@ are  then computed with both estimators and mean and variance of the estimate co
 the true entropy of the distribution generating the samples. In the test cases the two estimators show similar performance,
 see [results](../results/EntropyEstimation.csv).
 
-However examples of distributions with samples can easily be constructed where the entropy is arbitrarily close to zero whereas
-the naive empirical estimate is arbitraily large (see introduction).
+However examples of distributions can easily be constructed where the empirical estimate diverges arbitrarily far from 
+the true entropy while the Vasicek estimate remains close to the true value (see introduction).
 
 The Vasicek estimator is then superior and the current implementation can be improved so that
 it adapts itself to the distribution (bin sorting, Professor Learned-Miller, personal communication) and is fast when
