@@ -24,29 +24,31 @@
         </head>
         <body class="type">
       <div id="definition">
-        <a href="Histogram$.html" title="Go to companion"><img src="../../../lib/class_to_object_big.png" /></a>
+        <img src="../../../lib/trait_big.png" />
         <p id="owner"><a href="../../package.html" class="extype" name="org">org</a>.<a href="../package.html" class="extype" name="org.scalanlp">scalanlp</a>.<a href="package.html" class="extype" name="org.scalanlp.radical">radical</a></p>
-        <h1><a href="Histogram$.html" title="Go to companion">Histogram</a></h1>
+        <h1>Histogram</h1>
       </div>
 
       <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">class</span>
+        <span class="kind">trait</span>
       </span>
       <span class="symbol">
         <span class="name">Histogram</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       
-          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Created by oar on 6/22/16.</p><p>Class to represent the empirical distribution of a sample. With n denoting the sample size,
-1+sqrt(n) equal width bins will be allocated spanning the sample from minimum to maximum value.</p><p>The intended applications is estimation of the sample entropy. For this we need only the probabilities
-p_j=P(X=x_j) but not the values x_j (bin means) which therefore will be disregarded.</p><p>The emphasis is on speed. In particular we circumvent the O(nlog(n)) sorting of the sample needed in the
-Vasicek estimator. The class is adapted to the use in the ICA algorithm. This explains the data structures
-chosen.
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Created by oar on 7/2/16.
+Class to represent the empirical distribution of a sample. For this we need only the probabilities
+p_j=P(X=x_j) and bin boundaries but not the values x_j themselves which therefore will be disregarded.</p><p>The class HeavyHistogram implements a histogram that actually allocates bins and puts the sample values
+in the respective bins. This is useful for bin sorts.
 </p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+        </div><div class="toggleContainer block">
+          <span class="toggle">Known Subclasses</span>
+          <div class="subClasses hiddenContent"><a href="AdaptedHistogram.html" class="extype" name="org.scalanlp.radical.AdaptedHistogram">AdaptedHistogram</a>, <a href="HistogramBase.html" class="extype" name="org.scalanlp.radical.HistogramBase">HistogramBase</a>, <a href="NaiveHistogram.html" class="extype" name="org.scalanlp.radical.NaiveHistogram">NaiveHistogram</a></div>
         </div></div>
         
 
@@ -82,30 +84,73 @@ chosen.
 
       <div id="template">
         <div id="allMembers">
-        <div id="constructors" class="members">
-              <h3>Instance Constructors</h3>
-              <ol><li name="org.scalanlp.radical.Histogram#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="&lt;init&gt;(sample:breeze.linalg.DenseVector[Double]):org.scalanlp.radical.Histogram"></a>
-      <a id="&lt;init&gt;:Histogram"></a>
+        
+
+        
+
+        <div id="values" class="values members">
+              <h3>Abstract Value Members</h3>
+              <ol><li name="org.scalanlp.radical.Histogram#bin" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="bin(i:Int):(Double,Double)"></a>
+      <a id="bin(Int):(Double,Double)"></a>
       <h4 class="signature">
       <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">new</span>
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">Histogram</span><span class="params">(<span name="sample">sample: <span class="extype" name="breeze.linalg.DenseVector">DenseVector</span>[<span class="extype" name="scala.Double">Double</span>]</span>)</span>
+        <span class="name">bin</span><span class="params">(<span name="i">i: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: (<span class="extype" name="scala.Double">Double</span>, <span class="extype" name="scala.Double">Double</span>)</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Pair (xl,xr) where the i-th bin contains all values x of the sample with
+xl &lt;= x &lt; xr except for the last bin where the inequality is xl &lt;= x &lt;= xr.</p><div class="fullcomment"><div class="comment cmt"><p>Pair (xl,xr) where the i-th bin contains all values x of the sample with
+xl &lt;= x &lt; xr except for the last bin where the inequality is xl &lt;= x &lt;= xr.
+</p></div><dl class="paramcmts block"><dt class="param">i</dt><dd class="cmt"><p>number of bin, count starts at zero, i=0,...,numBins-1.
+</p></dd></dl></div>
+    </li><li name="org.scalanlp.radical.Histogram#binCount" visbl="pub" data-isabs="true" fullComment="yes" group="Ungrouped">
+      <a id="binCount(i:Int):Int"></a>
+      <a id="binCount(Int):Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">binCount</span><span class="params">(<span name="i">i: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Number of elements in i-th bin, i=0,1,.</p><div class="fullcomment"><div class="comment cmt"><p>Number of elements in i-th bin, i=0,1,...,numBins-1</p></div></div>
+    </li><li name="org.scalanlp.radical.Histogram#numBins" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="numBins:Int"></a>
+      <a id="numBins:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">numBins</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Number of bins.</p>
+    </li><li name="org.scalanlp.radical.Histogram#sampleSize" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="sampleSize:Int"></a>
+      <a id="sampleSize:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">sampleSize</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
       
     </li></ol>
             </div>
 
-        
-
-        
-
         <div id="values" class="values members">
-              <h3>Value Members</h3>
+              <h3>Concrete Value Members</h3>
               <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="!=(x$1:AnyRef):Boolean"></a>
       <a id="!=(AnyRef):Boolean"></a>
@@ -184,19 +229,6 @@ chosen.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="org.scalanlp.radical.Histogram#bins" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="bins:breeze.linalg.DenseVector[Double]"></a>
-      <a id="bins:DenseVector[Double]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">bins</span><span class="result">: <span class="extype" name="breeze.linalg.DenseVector">DenseVector</span>[<span class="extype" name="scala.Double">Double</span>]</span>
-      </span>
-      </h4>
-      
     </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
@@ -216,22 +248,6 @@ chosen.
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="org.scalanlp.radical.Histogram#entropy" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="entropy:Double"></a>
-      <a id="entropy:Double"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">entropy</span><span class="result">: <span class="extype" name="scala.Double">Double</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">This is the integral \[\int f(x)log(f(x))dx\] where the density f(x) is approximated by the stepfunction
-implied by the bin counts.</p><div class="fullcomment"><div class="comment cmt"><p>This is the integral \[\int f(x)log(f(x))dx\] where the density f(x) is approximated by the stepfunction
-implied by the bin counts.</p></div><dl class="paramcmts block"><dt>returns</dt><dd class="cmt"><p>
-</p></dd></dl></div>
     </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
@@ -258,19 +274,6 @@ implied by the bin counts.</p></div><dl class="paramcmts block"><dt>returns</dt>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="org.scalanlp.radical.Histogram#extremes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="extremes:(Double,Double)"></a>
-      <a id="extremes:(Double,Double)"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">extremes</span><span class="result">: (<span class="extype" name="scala.Double">Double</span>, <span class="extype" name="scala.Double">Double</span>)</span>
-      </span>
-      </h4>
-      
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
@@ -303,19 +306,6 @@ implied by the bin counts.</p></div><dl class="paramcmts block"><dt>returns</dt>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li name="org.scalanlp.radical.Histogram#h" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="h:Double"></a>
-      <a id="h:Double"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">h</span><span class="result">: <span class="extype" name="scala.Double">Double</span></span>
-      </span>
-      </h4>
-      
     </li><li name="scala.AnyRef#hashCode" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="hashCode():Int"></a>
       <a id="hashCode():Int"></a>
@@ -342,45 +332,6 @@ implied by the bin counts.</p></div><dl class="paramcmts block"><dt>returns</dt>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li name="org.scalanlp.radical.Histogram#max" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="max:Double"></a>
-      <a id="max:Double"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">max</span><span class="result">: <span class="extype" name="scala.Double">Double</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="org.scalanlp.radical.Histogram#min" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="min:Double"></a>
-      <a id="min:Double"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">min</span><span class="result">: <span class="extype" name="scala.Double">Double</span></span>
-      </span>
-      </h4>
-      
-    </li><li name="org.scalanlp.radical.Histogram#nBins" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="nBins:Int"></a>
-      <a id="nBins:Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">nBins</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
-      </span>
-      </h4>
-      
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -420,19 +371,6 @@ implied by the bin counts.</p></div><dl class="paramcmts block"><dt>returns</dt>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li name="org.scalanlp.radical.Histogram#sample" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="sample:breeze.linalg.DenseVector[Double]"></a>
-      <a id="sample:DenseVector[Double]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">sample</span><span class="result">: <span class="extype" name="breeze.linalg.DenseVector">DenseVector</span>[<span class="extype" name="scala.Double">Double</span>]</span>
-      </span>
-      </h4>
-      
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>

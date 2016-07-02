@@ -163,7 +163,7 @@
         <span class="name">applyFcn</span><span class="params">(<span name="M">M: <span class="extype" name="breeze.linalg.DenseMatrix">DenseMatrix</span>[<span class="extype" name="scala.Double">Double</span>]</span>, <span name="f">f: (<span class="extype" name="scala.Double">Double</span>) ⇒ <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result">: <span class="extype" name="breeze.linalg.DenseMatrix">DenseMatrix</span>[<span class="extype" name="scala.Double">Double</span>]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">apply function f to each entry of M, return new matrix.</p>
     </li><li name="org.scalanlp.radical.MathTools#applyFcn" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="applyFcn(u:breeze.linalg.DenseVector[Double],f:Double=&gt;Double):breeze.linalg.DenseVector[Double]"></a>
       <a id="applyFcn(DenseVector[Double],(Double)⇒Double):DenseVector[Double]"></a>
@@ -176,7 +176,7 @@
         <span class="name">applyFcn</span><span class="params">(<span name="u">u: <span class="extype" name="breeze.linalg.DenseVector">DenseVector</span>[<span class="extype" name="scala.Double">Double</span>]</span>, <span name="f">f: (<span class="extype" name="scala.Double">Double</span>) ⇒ <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result">: <span class="extype" name="breeze.linalg.DenseVector">DenseVector</span>[<span class="extype" name="scala.Double">Double</span>]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Apply function f to each entry of M, return new matrix.</p>
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -235,19 +235,40 @@
       </span>
       </h4>
       <p class="shortcomment cmt">Entropy of the Beta distribution Beta(a,b) on [0,1].</p>
-    </li><li name="org.scalanlp.radical.MathTools#entropyEstimateEmpirical" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="entropyEstimateEmpirical(sample:breeze.linalg.DenseVector[Double]):Double"></a>
-      <a id="entropyEstimateEmpirical(DenseVector[Double]):Double"></a>
+    </li><li name="org.scalanlp.radical.MathTools#entropyEstimateEmpiricalAdapted" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="entropyEstimateEmpiricalAdapted(sample:breeze.linalg.DenseVector[Double],nBins:Int):Double"></a>
+      <a id="entropyEstimateEmpiricalAdapted(DenseVector[Double],Int):Double"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">entropyEstimateEmpirical</span><span class="params">(<span name="sample">sample: <span class="extype" name="breeze.linalg.DenseVector">DenseVector</span>[<span class="extype" name="scala.Double">Double</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Double">Double</span></span>
+        <span class="name">entropyEstimateEmpiricalAdapted</span><span class="params">(<span name="sample">sample: <span class="extype" name="breeze.linalg.DenseVector">DenseVector</span>[<span class="extype" name="scala.Double">Double</span>]</span>, <span name="nBins">nBins: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Double">Double</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Entropy computed from histogram.</p>
+      <p class="shortcomment cmt">Entropy computed from adapted histogram with nBins bins (approximately).</p><div class="fullcomment"><div class="comment cmt"><p>Entropy computed from adapted histogram with nBins bins (approximately).
+Much better (and slower) than <a href="#entropyEstimatorEmpiricalFast:breeze.linalg.DenseVector[Double]=&gt;Double" class="extmbr" name="org.scalanlp.radical.MathTools#entropyEstimatorEmpiricalFast">entropyEstimatorEmpiricalFast</a> on clustered data and faster,
+but not as good as <a href="#entropyEstimatorVasicek(m:Int):breeze.linalg.DenseVector[Double]=&gt;Double" class="extmbr" name="org.scalanlp.radical.MathTools#entropyEstimatorVasicek">entropyEstimatorVasicek</a>.
+</p></div><dl class="paramcmts block"><dt class="param">sample</dt><dd class="cmt"><p>sample of random variable.</p></dd><dt class="param">nBins</dt><dd class="cmt"><p>number of bins in the histogram used for estimation.
+</p></dd></dl></div>
+    </li><li name="org.scalanlp.radical.MathTools#entropyEstimateEmpiricalFast" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="entropyEstimateEmpiricalFast(sample:breeze.linalg.DenseVector[Double]):Double"></a>
+      <a id="entropyEstimateEmpiricalFast(DenseVector[Double]):Double"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">entropyEstimateEmpiricalFast</span><span class="params">(<span name="sample">sample: <span class="extype" name="breeze.linalg.DenseVector">DenseVector</span>[<span class="extype" name="scala.Double">Double</span>]</span>)</span><span class="result">: <span class="extype" name="scala.Double">Double</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Entropy computed from histogram with 1+sqrt(sample size) bins of equal width.</p><div class="fullcomment"><div class="comment cmt"><p>Entropy computed from histogram with 1+sqrt(sample size) bins of equal width.
+This is very fast but may be very inaccurate on strongly clustered data (spiky densities),
+see MathTests.testEntropySpikyDist.
+</p></div><dl class="paramcmts block"><dt class="param">sample</dt><dd class="cmt"><p>sample of random variable.
+</p></dd></dl></div>
     </li><li name="org.scalanlp.radical.MathTools#entropyEstimateVasicek" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="entropyEstimateVasicek(sample:breeze.linalg.DenseVector[Double],m:Integer):Double"></a>
       <a id="entropyEstimateVasicek(DenseVector[Double],Integer):Double"></a>
@@ -261,21 +282,35 @@
       </span>
       </h4>
       <p class="shortcomment cmt">Vasicek entropy estimator for one dimensional random variable, see docs/RADICAL_ICA.</p><div class="fullcomment"><div class="comment cmt"><p>Vasicek entropy estimator for one dimensional random variable, see docs/RADICAL_ICA.pdf, p3, eq(12)).
+This the slowest, most accurate estimator.
 </p></div><dl class="paramcmts block"><dt class="param">m</dt><dd class="cmt"><p>spacing of Vasicek entropy estimator, see docs/RADICAL_ICA.pdf, p3, eq(12).
 </p></dd></dl></div>
-    </li><li name="org.scalanlp.radical.MathTools#entropyEstimatorEmpirical" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="entropyEstimatorEmpirical:breeze.linalg.DenseVector[Double]=&gt;Double"></a>
-      <a id="entropyEstimatorEmpirical:(DenseVector[Double])⇒Double"></a>
+    </li><li name="org.scalanlp.radical.MathTools#entropyEstimatorEmpiricalAdapted" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="entropyEstimatorEmpiricalAdapted(nBins:Int):breeze.linalg.DenseVector[Double]=&gt;Double"></a>
+      <a id="entropyEstimatorEmpiricalAdapted(Int):(DenseVector[Double])⇒Double"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">entropyEstimatorEmpirical</span><span class="result">: (<span class="extype" name="breeze.linalg.DenseVector">DenseVector</span>[<span class="extype" name="scala.Double">Double</span>]) ⇒ <span class="extype" name="scala.Double">Double</span></span>
+        <span class="name">entropyEstimatorEmpiricalAdapted</span><span class="params">(<span name="nBins">nBins: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: (<span class="extype" name="breeze.linalg.DenseVector">DenseVector</span>[<span class="extype" name="scala.Double">Double</span>]) ⇒ <span class="extype" name="scala.Double">Double</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Convenient type modification of <a href="#entropyEstimateEmpirical(sample:breeze.linalg.DenseVector[Double]):Double" class="extmbr" name="org.scalanlp.radical.MathTools#entropyEstimateEmpirical">entropyEstimateEmpirical</a>.</p>
+      <p class="shortcomment cmt">Convenient type modification of <a href="#entropyEstimateEmpiricalFast(sample:breeze.linalg.DenseVector[Double]):Double" class="extmbr" name="org.scalanlp.radical.MathTools#entropyEstimateEmpiricalFast">entropyEstimateEmpiricalFast</a>.</p>
+    </li><li name="org.scalanlp.radical.MathTools#entropyEstimatorEmpiricalFast" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="entropyEstimatorEmpiricalFast:breeze.linalg.DenseVector[Double]=&gt;Double"></a>
+      <a id="entropyEstimatorEmpiricalFast:(DenseVector[Double])⇒Double"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">entropyEstimatorEmpiricalFast</span><span class="result">: (<span class="extype" name="breeze.linalg.DenseVector">DenseVector</span>[<span class="extype" name="scala.Double">Double</span>]) ⇒ <span class="extype" name="scala.Double">Double</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Convenient type modification of <a href="#entropyEstimateEmpiricalFast(sample:breeze.linalg.DenseVector[Double]):Double" class="extmbr" name="org.scalanlp.radical.MathTools#entropyEstimateEmpiricalFast">entropyEstimateEmpiricalFast</a>.</p>
     </li><li name="org.scalanlp.radical.MathTools#entropyEstimatorVasicek" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="entropyEstimatorVasicek(m:Int):breeze.linalg.DenseVector[Double]=&gt;Double"></a>
       <a id="entropyEstimatorVasicek(Int):(DenseVector[Double])⇒Double"></a>
@@ -289,8 +324,8 @@
       </span>
       </h4>
       <p class="shortcomment cmt">Convenient type modification of <a href="#entropyEstimateVasicek(sample:breeze.linalg.DenseVector[Double],m:Integer):Double" class="extmbr" name="org.scalanlp.radical.MathTools#entropyEstimateVasicek">entropyEstimateVasicek</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Convenient type modification of <a href="#entropyEstimateVasicek(sample:breeze.linalg.DenseVector[Double],m:Integer):Double" class="extmbr" name="org.scalanlp.radical.MathTools#entropyEstimateVasicek">entropyEstimateVasicek</a>.
-</p></div><dl class="paramcmts block"><dt class="param">m</dt><dd class="cmt"><p>spacing of Vasicek entropy estimator, see docs/RADICAL_ICA.pdf, p3, eq(12).
-</p></dd></dl></div>
+The slowest most accurate estimator on clustered data.
+</p></div></div>
     </li><li name="org.scalanlp.radical.MathTools#entropyExponential" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="entropyExponential(lambda:Double):Double"></a>
       <a id="entropyExponential(Double):Double"></a>
@@ -384,7 +419,7 @@ Note that parametrization is _not_ N(mu,sigma*sigma) as usual.
       </span>
       </h4>
       <p class="shortcomment cmt">The fastest way to get sample minimum and maximum (3n/2 comparisons).</p><div class="fullcomment"><div class="comment cmt"><p>The fastest way to get sample minimum and maximum (3n/2 comparisons).
-</p></div><dl class="paramcmts block"><dt class="param">sample</dt><dd class="cmt"></dd><dt>returns</dt><dd class="cmt"><p>pair (min(sample),max(sample)).
+</p></div><dl class="paramcmts block"><dt class="param">sample</dt><dd class="cmt"><p>data sample, each column is one realization of the random vector.</p></dd><dt>returns</dt><dd class="cmt"><p>pair (min(sample),max(sample)).
 </p></dd></dl></div>
     </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="finalize():Unit"></a>
@@ -487,7 +522,7 @@ Note that parametrization is _not_ N(mu,sigma*sigma) as usual.
         <span class="name">meanExponential</span><span class="params">(<span name="lambda">lambda: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result">: <span class="extype" name="scala.Double">Double</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Entropy of the Exponential distribution \[E(\lambda)\] (mean is \[1/\lambda\]).</p>
+      <p class="shortcomment cmt">Mean of the Exponential distribution \[E(\lambda)\] (mean is \[1/\lambda\]).</p>
     </li><li name="org.scalanlp.radical.MathTools#meanGamma" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="meanGamma(shape:Double,scale:Double):Double"></a>
       <a id="meanGamma(Double,Double):Double"></a>
@@ -513,7 +548,7 @@ Note that parametrization is _not_ N(mu,sigma*sigma) as usual.
         <span class="name">meanUniform</span><span class="params">(<span name="a">a: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result">: <span class="extype" name="scala.Double">Double</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Entropy of the uniform distribution on [0,a].</p>
+      <p class="shortcomment cmt">Mean of the uniform distribution on [0,a].</p>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -700,7 +735,7 @@ the identity matrix in the same dimension as the sample.</p></div></div>
         <span class="name">varianceExponential</span><span class="params">(<span name="lambda">lambda: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result">: <span class="extype" name="scala.Double">Double</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Entropy of the Exponential distribution \[E(\lambda)\] (mean is \[1/\lambda\]).</p>
+      <p class="shortcomment cmt">Variance of the Exponential distribution \[E(\lambda)\] (mean is \[1/\lambda\]).</p>
     </li><li name="org.scalanlp.radical.MathTools#varianceGamma" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="varianceGamma(shape:Double,scale:Double):Double"></a>
       <a id="varianceGamma(Double,Double):Double"></a>
@@ -726,7 +761,7 @@ the identity matrix in the same dimension as the sample.</p></div></div>
         <span class="name">varianceUniform</span><span class="params">(<span name="a">a: <span class="extype" name="scala.Double">Double</span></span>)</span><span class="result">: <span class="extype" name="scala.Double">Double</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Entropy of the uniform distribution on [0,a].</p>
+      <p class="shortcomment cmt">Variance of the uniform distribution on [0,a].</p>
     </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>

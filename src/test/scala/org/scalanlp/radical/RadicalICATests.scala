@@ -27,7 +27,7 @@ class RadicalICATests {
         val paddedData = RadicalICA.pad(data,3,0.1);
         System.out.println(MathTools.applyFcn(paddedData,(u:Double)=>MathTools.round(u,2)));
     }
-    /** Data (sample size 1000, padded sample size 40*1000) are uniformly distributed in a d-dimensional cube
+    /** Data (sample size: sampleSize/40, padded size: sampleSize) are uniformly distributed in a d-dimensional cube
       * [-a,a]x[-a,a]x...x[-a,a]
       * (even dimension d) where a=sqrt(3) so that the data are white.
       *
@@ -52,6 +52,7 @@ class RadicalICATests {
       * |phi| < precision.
       *
       * @param dim  dimension of data (must be even).
+      * @param sampleSize size of padded sample (unpadded size will be sampleSize/40).
       * @param entropyEstimator  estimator for the marginal entropies. Provided are
       *                          MathTools.entropyEstimatorVasicek and MathTools.entropyEstimatorEmpirical.
       * @param doParallelSearch  use the multithreaded version of the rotation search,
@@ -63,24 +64,11 @@ class RadicalICATests {
       *
       * */
     def testCubeWithEstimator(
-            dim:Integer, entropyEstimator:(DenseVector[Double])=>Double,
+            dim:Integer, sampleSize:Int, entropyEstimator:(DenseVector[Double])=>Double,
             doParallelSearch:Boolean, precision:Double, verbose: Boolean
      ): Boolean = {
 
         assert(dim%2==0,"Dimension dim must be even  but is = "+dim)
-
-        var msg = "Data X: uniform in d-dimensional cube [-a,a]^d with d="+dim+" and a chosen such that cov(X)=Id.\n"
-        msg += "Rotating data with Jacobi rotations J(0,1,-0.7), J(2,3,-0.7),..., J(d-2,d-1,-0.7).\n"
-        msg += "Note: coordinates are noninteracting with respect to these rotations.\n"
-        msg += "Thus the unique product of Jacobi rotations J(i,j,phi) with angles phi in [-pi/4,pi/4]\n"
-        msg += "Undoing the data rotation consists of the inverse of these Jacobi rotations\n"
-        msg += "(sign of the angle reversed).\n"
-        msg += "Our ICA algorithm must find just this rotation.\n"
-        if(verbose) {
-            msg += "We will print the rotations J(i,j,phi) found, showing only those for which "
-            msg += "|phi| > "+precision+" (radians)."
-        }
-        System.out.println(msg+"\n\n")
 
         val rot = new Rotation(dim)
         // rotate in noninteracting coordinates, so the inverse rotation is unique
@@ -88,7 +76,7 @@ class RadicalICATests {
 
         // data uniformly distributed in [-a,a]^dim (cov(data)=(a²/3)*I, we make them white with a=sqrt(3)
         val a = Math.sqrt(3)
-        val cube: DenseMatrix[Double] = a * (2.0 * DenseMatrix.rand[Double](dim, 1000, Rand.uniform) - 1.0)
+        val cube: DenseMatrix[Double] = a * (2.0 * DenseMatrix.rand[Double](dim, sampleSize/40, Rand.uniform) - 1.0)
         val data = rot() * cube
 
         val nPad = 40
@@ -124,28 +112,46 @@ class RadicalICATests {
         pass
     }
     /** Does the test [[testCubeWithEstimator]] for
-      * entropyEstimator = MathTools.entropyEstimatorVasicek, MathTools.entropyEstimatorEmpirical.
-      * See documentation of this function for an explanation.
+      * entropyEstimator = [[MathTools.entropyEstimatorEmpiricalFast]], [[MathTools.entropyEstimatorEmpiricalAdapted]]
+      * and [[MathTools.entropyEstimatorVasicek]].
       *
+      * @param sampleSize size of padded sample (unpadded size will be sampleSize/40).
       * @param doVasicek if set to true the test will also be run with the Vasicek entropy estimator.
-      * In high dimensions (10+) at the usual sample sizes (10000+) this is slow. The test always runs with
-      * the empirical entropy estimator.
+      * In high dimensions (10+) at the usual sample sizes (10000+) this is very slow. The test always runs with
+      * the fast and adapted empirical entropy estimator.
       * @param doParallelSearch use the multithreaded version.
       * @param precision acceptable deviation (in radians) of angles in Jacobi rotations from theoretical optimum.
       * @param verbose if set to true prints the Jacobi angles of the demixing matrix.
       */
-    def testCube(dim:Integer, doParallelSearch:Boolean, precision:Double, doVasicek:Boolean, verbose: Boolean) = {
+    def testCube(dim:Int, sampleSize:Int, doParallelSearch:Boolean, precision:Double, doVasicek:Boolean, verbose: Boolean) = {
+
+        var msg = "\nData X: uniform in d-dimensional cube [-a,a]^d with d="+dim+" and a chosen such that cov(X)=Id.\n"
+        msg += "Rotating data with Jacobi rotations J(0,1,-0.7), J(2,3,-0.7),..., J(d-2,d-1,-0.7).\n"
+        msg += "Note: coordinates are noninteracting with respect to these rotations.\n"
+        msg += "Thus the unique product of Jacobi rotations J(i,j,phi) with angles phi in [-pi/4,pi/4]\n"
+        msg += "Undoing the data rotation consists of the inverse of these Jacobi rotations\n"
+        msg += "(sign of the angle reversed).\n"
+        msg += "Our ICA algorithm must find just this rotation.\n"
+        if(verbose) {
+            msg += "We will print the rotations J(i,j,phi) found, showing only those for which "
+            msg += "|phi| > "+precision+" (radians)."
+        }
+        System.out.println(msg+"\n\n")
 
         System.out.println("\n####-----Cube rotation test with empirical entropy estimator-----####\n")
-        var entropyEstimator = MathTools.entropyEstimatorEmpirical
-        testCubeWithEstimator(dim,entropyEstimator,doParallelSearch,precision,verbose)
+        var entropyEstimator = MathTools.entropyEstimatorEmpiricalFast
+        testCubeWithEstimator(dim,sampleSize,entropyEstimator,doParallelSearch,precision,verbose)
+
+        System.out.println("\n####-----Cube rotation test with adapted empirical entropy estimator-----####\n")
+        entropyEstimator = MathTools.entropyEstimatorEmpiricalAdapted(sampleSize/50)
+        testCubeWithEstimator(dim,sampleSize,entropyEstimator,doParallelSearch,precision,verbose)
 
         if(doVasicek){
 
             System.out.println("\n####-----Cube rotation test with Vasicek entropy estimator-----####\n")
             val m = 200  // spacing in the Vasicek estimator appropriate for the samples in testCubeWithEstimator
             entropyEstimator = MathTools.entropyEstimatorVasicek(m)
-            testCubeWithEstimator(dim,entropyEstimator,doParallelSearch,precision,verbose)
+            testCubeWithEstimator(dim,sampleSize,entropyEstimator,doParallelSearch,precision,verbose)
 
         }
     }

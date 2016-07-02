@@ -146,8 +146,17 @@ The test does not take this into account properly.
 2016-06-29:|
 -------------
 
-Rotation: added method to reduce mutiple rotations in the same coordinate plane.
+Rotation: added method to reduce multiple rotations in the same coordinate plane.
 With that fixed up the BUG in RadicalICATests.testCube above.
+
+
+#-----------------------------------------------------------------------------------
+2016-07-02:|
+-------------
+
+Added AdaptedHistogram and entropy estimator based on this. Added MathTests.testEntropySpikyDist
+for an example where the naive entropy estimation fails badly. Added ContinuousMixtureDistribution to get this
+example.
 
 
 

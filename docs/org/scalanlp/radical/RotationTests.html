@@ -504,35 +504,21 @@
       <p class="shortcomment cmt">Allocate rotation with angles angle(0,1)=pi/4 and angle(1,2)=pi/4
 and check that this rotates e_1 to e_3, e_2 to -e_1 and e_3 to -e_2
 </p>
-    </li><li name="org.scalanlp.radical.RotationTests#testRotationInverse" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="testRotationInverse:Unit"></a>
-      <a id="testRotationInverse:Unit"></a>
+    </li><li name="org.scalanlp.radical.RotationTests#testRotationConsistency" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="testRotationConsistency:Boolean"></a>
+      <a id="testRotationConsistency:Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">testRotationInverse</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+        <span class="name">testRotationConsistency</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Allocate a rotation and check if the inverse rotation matrix is computed correctly.</p><div class="fullcomment"><div class="comment cmt"><p>Allocate a rotation and check if the inverse rotation matrix is computed correctly.
-Rotation angles(i,j) are set to (i+j)/10.
-Dimension of space in which we rotate is set to 20.
-</p></div></div>
-    </li><li name="org.scalanlp.radical.RotationTests#testRotationIsOrthogonal" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="testRotationIsOrthogonal:Unit"></a>
-      <a id="testRotationIsOrthogonal:Unit"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">testRotationIsOrthogonal</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Allocate a rotation and check if the rotation matrix is orthogonal.</p><div class="fullcomment"><div class="comment cmt"><p>Allocate a rotation and check if the rotation matrix is orthogonal.
+      <p class="shortcomment cmt">Allocate a rotation and check if the rotation matrix is orthogonal and its inverse
+computed correctly.</p><div class="fullcomment"><div class="comment cmt"><p>Allocate a rotation and check if the rotation matrix is orthogonal and its inverse
+computed correctly.
 Rotation angles(i,j) are set to (i+j)/10.
 Dimension of space in which we rotate is set to 20.
 </p></div></div>

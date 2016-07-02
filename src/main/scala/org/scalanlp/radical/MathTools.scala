@@ -2,9 +2,7 @@ package org.scalanlp.radical
 
 
 import scala.math.abs
-import breeze.linalg.{Axis, DenseMatrix, DenseVector, eigSym, sum }
-import breeze.numerics.{ sqrt => bn_sqrt }
-import net.jafama.FastMath
+import breeze.linalg.{DenseMatrix, DenseVector}
 import breeze.numerics._
 
 
@@ -22,6 +20,7 @@ object MathTools {
     def betaFcn(a:Double,b:Double) = Math.exp(lgamma(a))*Math.exp(lgamma(b))/Math.exp(lgamma(a+b))
 
     /** Vasicek entropy estimator for one dimensional random variable, see docs/RADICAL_ICA.pdf, p3, eq(12)).
+      * This the slowest, most accurate estimator.
       *
       * @param sample: sample of random variable.
       * @param m spacing of Vasicek entropy estimator, see docs/RADICAL_ICA.pdf, p3, eq(12).
@@ -35,26 +34,41 @@ object MathTools {
         while(i+m<n){ sum+=Math.log(z(i+m)-z(i)); i+=1 }
         sum/(n-m)+Math.log((n+1).toDouble/m)
     }
-
     /** Convenient type modification of [[entropyEstimateVasicek]].
-      *
-      * @param m spacing of Vasicek entropy estimator, see docs/RADICAL_ICA.pdf, p3, eq(12).
+      * The slowest most accurate estimator on clustered data.
       */
     def entropyEstimatorVasicek(m:Int): (DenseVector[Double])=>Double =
         (sample:DenseVector[Double]) => entropyEstimateVasicek(sample,m)
 
-    /** Entropy computed from histogram.
+    /** Entropy computed from histogram with 1+sqrt(sample size) bins of equal width.
+      * This is very fast but may be very inaccurate on strongly clustered data (spiky densities),
+      * see MathTests.testEntropySpikyDist.
       *
-      * @param sample: sample of random variable.
+      * @param sample sample of random variable.
       */
-    def entropyEstimateEmpirical(sample:DenseVector[Double]):Double = {
+    def entropyEstimateEmpiricalFast(sample:DenseVector[Double]):Double = {
 
-        val hist = Histogram(sample)
+        val hist = NaiveHistogram(sample)
         hist.entropy
     }
-    /** Convenient type modification of [[entropyEstimateEmpirical]].*/
-    def entropyEstimatorEmpirical:(DenseVector[Double])=>Double =
-        (sample:DenseVector[Double]) => entropyEstimateEmpirical(sample)
+    /** Convenient type modification of [[entropyEstimateEmpiricalFast]].*/
+    def entropyEstimatorEmpiricalFast:(DenseVector[Double])=>Double =
+        (sample:DenseVector[Double]) => entropyEstimateEmpiricalFast(sample)
+    /** Entropy computed from adapted histogram with nBins bins (approximately).
+      * Much better (and slower) than [[entropyEstimatorEmpiricalFast]] on clustered data and faster,
+      * but not as good as [[entropyEstimatorVasicek]].
+      *
+      * @param sample sample of random variable.
+      * @param nBins number of bins in the histogram used for estimation.
+      */
+    def entropyEstimateEmpiricalAdapted(sample:DenseVector[Double],nBins:Int):Double = {
+
+        val hist = AdaptedHistogram(sample,nBins)
+        hist.entropy
+    }
+    /** Convenient type modification of [[entropyEstimateEmpiricalFast]].*/
+    def entropyEstimatorEmpiricalAdapted(nBins:Int):(DenseVector[Double])=>Double =
+        (sample:DenseVector[Double]) => entropyEstimateEmpiricalAdapted(sample,nBins)
 
     /**
       * Entropy of the uniform distribution on [0,a].
@@ -183,7 +197,7 @@ object MathTools {
         while(i<upToIdx){ sum+=x(i); i+=1 }
         sum
     }
-    // apply function f to each entry of M, return new matrix
+    /** Apply function f to each entry of M, return new matrix.*/
     final def applyFcn(u:DenseVector[Double],f:Double=>Double):DenseVector[Double] = {
 
         val res = new DenseVector[Double](u.length)
@@ -191,7 +205,7 @@ object MathTools {
         while(i<u.length){ res(i)=f(u(i)); i+=1 }
         res
     }
-    // apply function f to each entry of M, return new matrix
+    /** apply function f to each entry of M, return new matrix. */
     final def applyFcn(M:DenseMatrix[Double],f:Double=>Double):DenseMatrix[Double] = {
 
         val res = new DenseMatrix[Double](M.rows,M.cols)

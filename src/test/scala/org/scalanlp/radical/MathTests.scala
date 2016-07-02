@@ -2,7 +2,7 @@ package org.scalanlp.radical
 
 import breeze.linalg.{Axis, DenseMatrix, DenseVector, eigSym, sum}
 import breeze.stats.{mean, variance}
-import breeze.stats.distributions.{ContinuousDistr, _}
+import breeze.stats.distributions._
 
 
 /**
@@ -100,8 +100,8 @@ object MathTests {
             val s = dist.sample(sampleSize)
             val sample = DenseVector.tabulate(sampleSize){i => s(i)}    // turn s into vector
             val samplePadded = MathTools.pad(sample(0 until (sampleSize/10)),10,sigmaPad)
-            entropies(i) = MathTools.entropyEstimateEmpirical(sample)
-            entropiesP(i) = MathTools.entropyEstimateEmpirical(samplePadded)
+            entropies(i) = MathTools.entropyEstimateEmpiricalFast(sample)
+            entropiesP(i) = MathTools.entropyEstimateEmpiricalFast(samplePadded)
         })
         Timer.stop
         msg = "Empirical entropy, "+Timer.report
@@ -243,5 +243,34 @@ object MathTests {
         System.out.println(results)
         System.out.println("\nFinished.")
     }
+
+    /** Comparing the entropy estimators on a sample of size sampleSize for the following distribution P:
+      * P = 0.5*Unif(0,1)+0.5*Unif(0,0.0001) with density
+      * f(u) = 0.5*(1+1/0.0001) on [0,0.0001] and f(u)=0.5 on the remaining interval.
+      * The spike at the left endpoint is a problem for the naive estimator with equal width bins.
+      */
+    def testEntropySpikyDist(sampleSize:Int): Unit = {
+
+        val distributions = Vector[ContinuousDistr[Double]](Uniform(0,1d), Uniform(0,0.0001d))
+        val weights = Vector[Double](0.5, 0.5)
+
+        val P:ContinuousDistr[Double] = ContinuousMixtureDistribution(distributions,weights)
+        val sample: DenseVector[Double] = new DenseVector[Double](P.sample(sampleSize).toArray)
+
+        val entHistFast = MathTools.entropyEstimateEmpiricalFast(sample)
+        val entHistAdapted = MathTools.entropyEstimateEmpiricalAdapted(sample,sample.size/50)
+        val m = Math.sqrt(sampleSize).toInt    // spacing
+        val entVasicek = MathTools.entropyEstimateVasicek(sample,m)
+        val entropy = -(0.0001*5000.5*Math.log(5000.5)+0.9999*0.5*Math.log(0.5))
+
+        var message = "Entropy, theoretical: "+MathTools.round(entropy,4)+",\n"
+        message += "entropy, naive histogram estimator: "+MathTools.round(entHistFast,4)+",\n"
+        message += "entropy, adapted histogram estimator estimator: "+MathTools.round(entHistAdapted,4)+",\n"
+        message += "entropy, Vasicek estimator: "+MathTools.round(entVasicek,4)+".\n"
+
+        print(message)
+
+    }
+
 
 }

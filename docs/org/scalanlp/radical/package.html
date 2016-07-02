@@ -58,19 +58,72 @@
 
         <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li name="org.scalanlp.radical.Histogram" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="HistogramextendsAnyRef"></a>
-      <a id="Histogram:Histogram"></a>
+              <ol><li name="org.scalanlp.radical.AdaptedHistogram" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AdaptedHistogramextendsHistogramBase"></a>
+      <a id="AdaptedHistogram:AdaptedHistogram"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
+        <a href="AdaptedHistogram.html"><span class="name">AdaptedHistogram</span></a><span class="result"> extends <a href="HistogramBase.html" class="extype" name="org.scalanlp.radical.HistogramBase">HistogramBase</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Created by oar on 7/2/16.</p>
+    </li><li name="org.scalanlp.radical.ContinuousMixtureDistribution" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ContinuousMixtureDistributionextendsContinuousDistr[Double]"></a>
+      <a id="ContinuousMixtureDistribution:ContinuousMixtureDistribution"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="ContinuousMixtureDistribution.html"><span class="name">ContinuousMixtureDistribution</span></a><span class="result"> extends <span class="extype" name="breeze.stats.distributions.ContinuousDistr">ContinuousDistr</span>[<span class="extype" name="scala.Double">Double</span>]</span>
+      </span>
+      </h4>
+      <p class="comment cmt">Convex sum of continuous distributions \sum_jp_jDist_j in Euclidean space with weights p_j
+(positive, summing to one).</p>
+    </li><li name="org.scalanlp.radical.DoubleGrid" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DoubleGridextendsAnyRef"></a>
+      <a id="DoubleGrid:DoubleGrid"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">final </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="DoubleGrid.html"><span class="name">DoubleGrid</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Created by oar on 7/2/16.</p>
+    </li><li name="org.scalanlp.radical.Histogram" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="HistogramextendsAnyRef"></a>
+      <a id="Histogram:Histogram"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">trait</span>
+      </span>
+      <span class="symbol">
         <a href="Histogram.html"><span class="name">Histogram</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
-      <p class="comment cmt">Created by oar on 6/22/16.</p>
+      <p class="comment cmt">Created by oar on 7/2/16.</p>
+    </li><li name="org.scalanlp.radical.HistogramBase" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="HistogramBaseextendsHistogram"></a>
+      <a id="HistogramBase:HistogramBase"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier">abstract </span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="HistogramBase.html"><span class="name">HistogramBase</span></a><span class="result"> extends <a href="Histogram.html" class="extype" name="org.scalanlp.radical.Histogram">Histogram</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Created by oar on 7/2/16.</p>
     </li><li name="org.scalanlp.radical.MatrixFunctionTests" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="MatrixFunctionTestsextendsAnyRef"></a>
       <a id="MatrixFunctionTests:MatrixFunctionTests"></a>
@@ -84,6 +137,19 @@
       </span>
       </h4>
       <p class="comment cmt">Created by oar on 6/3/16.</p>
+    </li><li name="org.scalanlp.radical.NaiveHistogram" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NaiveHistogramextendsHistogramBase"></a>
+      <a id="NaiveHistogram:NaiveHistogram"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="NaiveHistogram.html"><span class="name">NaiveHistogram</span></a><span class="result"> extends <a href="HistogramBase.html" class="extype" name="org.scalanlp.radical.HistogramBase">HistogramBase</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Created by oar on 6/22/16.</p>
     </li><li name="org.scalanlp.radical.RadicalICA" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="RadicalICAextendsAnyRef"></a>
       <a id="RadicalICA:RadicalICA"></a>
@@ -144,16 +210,42 @@
 
         <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li name="org.scalanlp.radical.Histogram" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="Histogram"></a>
-      <a id="Histogram:Histogram"></a>
+              <ol><li name="org.scalanlp.radical.AdaptedHistogram" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AdaptedHistogram"></a>
+      <a id="AdaptedHistogram:AdaptedHistogram"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Histogram$.html"><span class="name">Histogram</span></a>
+        <a href="AdaptedHistogram$.html"><span class="name">AdaptedHistogram</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalanlp.radical.ContinuousMixtureDistribution" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ContinuousMixtureDistribution"></a>
+      <a id="ContinuousMixtureDistribution:ContinuousMixtureDistribution"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ContinuousMixtureDistribution$.html"><span class="name">ContinuousMixtureDistribution</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalanlp.radical.DoubleGrid" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DoubleGrid"></a>
+      <a id="DoubleGrid:DoubleGrid"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="DoubleGrid$.html"><span class="name">DoubleGrid</span></a>
       </span>
       </h4>
       
@@ -196,6 +288,19 @@
       </span>
       </h4>
       <p class="comment cmt">Some static helper functions for matrices</p>
+    </li><li name="org.scalanlp.radical.NaiveHistogram" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="NaiveHistogram"></a>
+      <a id="NaiveHistogram:NaiveHistogram"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="NaiveHistogram$.html"><span class="name">NaiveHistogram</span></a>
+      </span>
+      </h4>
+      
     </li><li name="org.scalanlp.radical.RadicalICA" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="RadicalICA"></a>
       <a id="RadicalICA:RadicalICA"></a>

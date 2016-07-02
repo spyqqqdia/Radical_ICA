@@ -49,7 +49,11 @@ import scala.concurrent.ExecutionContext.Implicits.global
   * @param nAngles number of equidistant grid points in [-pi/4,pi/4] scanned for optimal angles alpha of the
   *                Jacobi rotations.
   * @param entropyEstimator estimator for the marginal entropies. Provided are
-  *      [[MathTools.entropyEstimatorVasicek]] and [[MathTools.entropyEstimatorEmpirical]].
+  *      [[MathTools.entropyEstimatorVasicek]], [[MathTools.entropyEstimatorEmpiricalAdapted]] and
+  *      [[MathTools.entropyEstimatorEmpiricalFast]]
+  * listed from slowest and most precise to fastest and least precise. The last estimator can fail badly on
+  * strongly clustered data (spiky densities).
+  *
   * @param doWhitenData padded data will be whitened before proceeding. Should always be done.
   *      But for testing purposes we want to be able to switch this off
   * @param doParallelSearch use the multithreaded version of the rotation search,
@@ -80,9 +84,6 @@ class RadicalICA(
       * Performs complete grid search over [[nAngles]] equidistant angles in [-pi/4,pi/4] to find the optimal angle phi for
       * the Jacobi rotation J(i,j,phi) for each pair of coordinates (i,j) and  produces the demixing matrix
       * as product of the optimal Jacobi rotations. Sequential version.
-      *
-      * @param vrbose
-      * @return
       */
     def findOptimalRotation(vrbose:Boolean):Rotation = {
 
@@ -151,9 +152,6 @@ class RadicalICA(
       * Performs complete grid search over [[nAngles]] equidistant angles in [-pi/4,pi/4] to find the optimal
       * angle phi for the Jacobi rotation J(i,j,phi) for each pair of coordinates (i,j) and  produces the demixing
       * matrix as product of the optimal Jacobi rotations, parallelized version.
-      *
-      * @param vrbose
-      * @return the rotation found
       */
     def findOptimalRotationPar(vrbose:Boolean):Rotation = {
 
@@ -310,7 +308,10 @@ object RadicalICA {
       * @param nAngles number of equidistant grid points in [-pi/4,pi/4] scanned for optimal angles alpha
       *                of the Jacobi rotations.
       * @param entropyEstimator estimator for the marginal entropies. Provided are
-      *      [[MathTools.entropyEstimatorVasicek]] and [[MathTools.entropyEstimatorEmpirical]].
+      *      [[MathTools.entropyEstimatorVasicek]], [[MathTools.entropyEstimatorEmpiricalAdapted]] and
+      *      [[MathTools.entropyEstimatorEmpiricalFast]]
+      * listed from slowest and most precise to fastest and least precise. The last estimator can fail badly on
+      * strongly clustered data (spiky densities).
       * @param doWhitenData padded data will be whitened before proceeding. Should always be done.
       *      But for testing purposes we want to be able to switch this off
       * @param doParallelSearch use the multithreaded version of the rotation search,

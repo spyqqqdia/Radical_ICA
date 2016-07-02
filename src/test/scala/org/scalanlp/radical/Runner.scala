@@ -33,14 +33,16 @@ object Runner {
         // radICATests.showPadding
         // matrixFunctionTests.whiteningTest()
         // MathTests.entropyTest()
+        // MathTests.testEntropySpikyDist(10000)
 
 
         val dim = 10
+        val sampleSize = 40000
         val precision = 0.08
-        val doVasicek = false
+        val doVasicek = true
         val doParallelSearch =true
         val verbose = true
-        radICATests.testCube(dim,doParallelSearch,precision,doVasicek,verbose)
+        radICATests.testCube(dim,sampleSize,doParallelSearch,precision,doVasicek,verbose)
 
 
     }

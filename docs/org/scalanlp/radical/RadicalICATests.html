@@ -364,39 +364,41 @@ Then print result. Must be 3x6 matrix with entries close to 1.0.
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
     </li><li name="org.scalanlp.radical.RadicalICATests#testCube" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="testCube(dim:Integer,doParallelSearch:Boolean,precision:Double,doVasicek:Boolean,verbose:Boolean):AnyVal"></a>
-      <a id="testCube(Integer,Boolean,Double,Boolean,Boolean):AnyVal"></a>
+      <a id="testCube(dim:Int,sampleSize:Int,doParallelSearch:Boolean,precision:Double,doVasicek:Boolean,verbose:Boolean):AnyVal"></a>
+      <a id="testCube(Int,Int,Boolean,Double,Boolean,Boolean):AnyVal"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">testCube</span><span class="params">(<span name="dim">dim: <span class="extype" name="java.lang.Integer">Integer</span></span>, <span name="doParallelSearch">doParallelSearch: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="precision">precision: <span class="extype" name="scala.Double">Double</span></span>, <span name="doVasicek">doVasicek: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="verbose">verbose: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <span class="extype" name="scala.AnyVal">AnyVal</span></span>
+        <span class="name">testCube</span><span class="params">(<span name="dim">dim: <span class="extype" name="scala.Int">Int</span></span>, <span name="sampleSize">sampleSize: <span class="extype" name="scala.Int">Int</span></span>, <span name="doParallelSearch">doParallelSearch: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="precision">precision: <span class="extype" name="scala.Double">Double</span></span>, <span name="doVasicek">doVasicek: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="verbose">verbose: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <span class="extype" name="scala.AnyVal">AnyVal</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Does the test <a href="#testCubeWithEstimator(dim:Integer,entropyEstimator:breeze.linalg.DenseVector[Double]=&gt;Double,doParallelSearch:Boolean,precision:Double,verbose:Boolean):Boolean" class="extmbr" name="org.scalanlp.radical.RadicalICATests#testCubeWithEstimator">testCubeWithEstimator</a> for
-entropyEstimator = MathTools.</p><div class="fullcomment"><div class="comment cmt"><p>Does the test <a href="#testCubeWithEstimator(dim:Integer,entropyEstimator:breeze.linalg.DenseVector[Double]=&gt;Double,doParallelSearch:Boolean,precision:Double,verbose:Boolean):Boolean" class="extmbr" name="org.scalanlp.radical.RadicalICATests#testCubeWithEstimator">testCubeWithEstimator</a> for
-entropyEstimator = MathTools.entropyEstimatorVasicek, MathTools.entropyEstimatorEmpirical.
-See documentation of this function for an explanation.
-</p></div><dl class="paramcmts block"><dt class="param">doParallelSearch</dt><dd class="cmt"><p>use the multithreaded version.</p></dd><dt class="param">precision</dt><dd class="cmt"><p>acceptable deviation (in radians) of angles in Jacobi rotations from theoretical optimum.</p></dd><dt class="param">doVasicek</dt><dd class="cmt"><p>if set to true the test will also be run with the Vasicek entropy estimator.
-In high dimensions (10+) at the usual sample sizes (10000+) this is slow. The test always runs with
-the empirical entropy estimator.</p></dd><dt class="param">verbose</dt><dd class="cmt"><p>if set to true prints the Jacobi angles of the demixing matrix.
+      <p class="shortcomment cmt">Does the test <a href="#testCubeWithEstimator(dim:Integer,sampleSize:Int,entropyEstimator:breeze.linalg.DenseVector[Double]=&gt;Double,doParallelSearch:Boolean,precision:Double,verbose:Boolean):Boolean" class="extmbr" name="org.scalanlp.radical.RadicalICATests#testCubeWithEstimator">testCubeWithEstimator</a> for
+entropyEstimator = <a href="MathTools$.html#entropyEstimatorEmpiricalFast:breeze.linalg.DenseVector[Double]=&gt;Double" class="extmbr" name="org.scalanlp.radical.MathTools#entropyEstimatorEmpiricalFast">MathTools.entropyEstimatorEmpiricalFast</a>, <a href="MathTools$.html#entropyEstimatorEmpiricalAdapted(nBins:Int):breeze.linalg.DenseVector[Double]=&gt;Double" class="extmbr" name="org.scalanlp.radical.MathTools#entropyEstimatorEmpiricalAdapted">MathTools.entropyEstimatorEmpiricalAdapted</a>
+and <a href="MathTools$.html#entropyEstimatorVasicek(m:Int):breeze.linalg.DenseVector[Double]=&gt;Double" class="extmbr" name="org.scalanlp.radical.MathTools#entropyEstimatorVasicek">MathTools.entropyEstimatorVasicek</a>.</p><div class="fullcomment"><div class="comment cmt"><p>Does the test <a href="#testCubeWithEstimator(dim:Integer,sampleSize:Int,entropyEstimator:breeze.linalg.DenseVector[Double]=&gt;Double,doParallelSearch:Boolean,precision:Double,verbose:Boolean):Boolean" class="extmbr" name="org.scalanlp.radical.RadicalICATests#testCubeWithEstimator">testCubeWithEstimator</a> for
+entropyEstimator = <a href="MathTools$.html#entropyEstimatorEmpiricalFast:breeze.linalg.DenseVector[Double]=&gt;Double" class="extmbr" name="org.scalanlp.radical.MathTools#entropyEstimatorEmpiricalFast">MathTools.entropyEstimatorEmpiricalFast</a>, <a href="MathTools$.html#entropyEstimatorEmpiricalAdapted(nBins:Int):breeze.linalg.DenseVector[Double]=&gt;Double" class="extmbr" name="org.scalanlp.radical.MathTools#entropyEstimatorEmpiricalAdapted">MathTools.entropyEstimatorEmpiricalAdapted</a>
+and <a href="MathTools$.html#entropyEstimatorVasicek(m:Int):breeze.linalg.DenseVector[Double]=&gt;Double" class="extmbr" name="org.scalanlp.radical.MathTools#entropyEstimatorVasicek">MathTools.entropyEstimatorVasicek</a>.
+</p></div><dl class="paramcmts block"><dt class="param">sampleSize</dt><dd class="cmt"><p>size of padded sample (unpadded size will be sampleSize/40).</p></dd><dt class="param">doParallelSearch</dt><dd class="cmt"><p>use the multithreaded version.</p></dd><dt class="param">precision</dt><dd class="cmt"><p>acceptable deviation (in radians) of angles in Jacobi rotations from theoretical optimum.</p></dd><dt class="param">doVasicek</dt><dd class="cmt"><p>if set to true the test will also be run with the Vasicek entropy estimator.
+In high dimensions (10+) at the usual sample sizes (10000+) this is very slow. The test always runs with
+the fast and adapted empirical entropy estimator.</p></dd><dt class="param">verbose</dt><dd class="cmt"><p>if set to true prints the Jacobi angles of the demixing matrix.
 </p></dd></dl></div>
     </li><li name="org.scalanlp.radical.RadicalICATests#testCubeWithEstimator" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="testCubeWithEstimator(dim:Integer,entropyEstimator:breeze.linalg.DenseVector[Double]=&gt;Double,doParallelSearch:Boolean,precision:Double,verbose:Boolean):Boolean"></a>
-      <a id="testCubeWithEstimator(Integer,(DenseVector[Double])⇒Double,Boolean,Double,Boolean):Boolean"></a>
+      <a id="testCubeWithEstimator(dim:Integer,sampleSize:Int,entropyEstimator:breeze.linalg.DenseVector[Double]=&gt;Double,doParallelSearch:Boolean,precision:Double,verbose:Boolean):Boolean"></a>
+      <a id="testCubeWithEstimator(Integer,Int,(DenseVector[Double])⇒Double,Boolean,Double,Boolean):Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">testCubeWithEstimator</span><span class="params">(<span name="dim">dim: <span class="extype" name="java.lang.Integer">Integer</span></span>, <span name="entropyEstimator">entropyEstimator: (<span class="extype" name="breeze.linalg.DenseVector">DenseVector</span>[<span class="extype" name="scala.Double">Double</span>]) ⇒ <span class="extype" name="scala.Double">Double</span></span>, <span name="doParallelSearch">doParallelSearch: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="precision">precision: <span class="extype" name="scala.Double">Double</span></span>, <span name="verbose">verbose: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
+        <span class="name">testCubeWithEstimator</span><span class="params">(<span name="dim">dim: <span class="extype" name="java.lang.Integer">Integer</span></span>, <span name="sampleSize">sampleSize: <span class="extype" name="scala.Int">Int</span></span>, <span name="entropyEstimator">entropyEstimator: (<span class="extype" name="breeze.linalg.DenseVector">DenseVector</span>[<span class="extype" name="scala.Double">Double</span>]) ⇒ <span class="extype" name="scala.Double">Double</span></span>, <span name="doParallelSearch">doParallelSearch: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="precision">precision: <span class="extype" name="scala.Double">Double</span></span>, <span name="verbose">verbose: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">Data (sample size 1000, padded sample size 40*1000) are uniformly distributed in a d-dimensional cube [-a,a]^d
-(even dimension d) where a=sqrt(3) so that the data are white.</p><div class="fullcomment"><div class="comment cmt"><p>Data (sample size 1000, padded sample size 40*1000) are uniformly distributed in a d-dimensional cube [-a,a]^d
+      <p class="shortcomment cmt">Data (sample size: sampleSize/40, padded size: sampleSize) are uniformly distributed in a d-dimensional cube
+[-a,a]x[-a,a]x.</p><div class="fullcomment"><div class="comment cmt"><p>Data (sample size: sampleSize/40, padded size: sampleSize) are uniformly distributed in a d-dimensional cube
+[-a,a]x[-a,a]x...x[-a,a]
 (even dimension d) where a=sqrt(3) so that the data are white.</p><p>The data are then rotated by -0.7 radians in non interacting dimensions (0,1),(2,3),...(d-2,d-1)
 and Radical ICA is carried out without whitening (so that the whitening matrix does not
 introduce further rotation).</p><p>In this case the demixing rotation is uniquely determined  and must rotate by 0.7 radians in the same
@@ -408,7 +410,7 @@ as a parameter.</p><p>In our setup the suggested default is 0.08 up to dimension
 (before and after padding).</p><p>With this the test passes if and only if the demixing rotation contains all the Jacobi rotations
 J(2i,2i+1,phi) with |phi-0.7| &lt; precision and all other Jacobi rotations which it contains have angle
 |phi| &lt; precision.
-</p></div><dl class="paramcmts block"><dt class="param">dim</dt><dd class="cmt"><p>dimension of data (must be even).</p></dd><dt class="param">entropyEstimator</dt><dd class="cmt"><p>estimator for the marginal entropies. Provided are
+</p></div><dl class="paramcmts block"><dt class="param">dim</dt><dd class="cmt"><p>dimension of data (must be even).</p></dd><dt class="param">sampleSize</dt><dd class="cmt"><p>size of padded sample (unpadded size will be sampleSize/40).</p></dd><dt class="param">entropyEstimator</dt><dd class="cmt"><p>estimator for the marginal entropies. Provided are
                          MathTools.entropyEstimatorVasicek and MathTools.entropyEstimatorEmpirical.</p></dd><dt class="param">doParallelSearch</dt><dd class="cmt"><p>use the multithreaded version of the rotation search,
                          the sequential version exists only for testing and debugging.</p></dd><dt class="param">precision</dt><dd class="cmt"><p>acceptable deviation (in radians) of angles in Jacobi rotations from theoretical optimum.</p></dd><dt class="param">verbose</dt><dd class="cmt"><p>if set to true will show all Jacobi rotations J(i,j,phi) of the demixing matrix where
                 |phi| &gt; precision, otherwise will only report pass/fail as defined above.</p></dd></dl></div>

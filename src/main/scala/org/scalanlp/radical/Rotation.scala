@@ -71,8 +71,6 @@ class Rotation(val dim:Int) {
     /** Inverse of the rotation matrix, alternative computation. Because of orthogonality
       * the inverse is simply the transpose so this method is redundant. It's useful for consistency checks
       * though.
-      *
-      * @return
       */
     def rotationMatrixInverse:DenseMatrix[Double]= {
 
@@ -113,8 +111,6 @@ class Rotation(val dim:Int) {
       *
       * WARNING: in general the resulting rotation is only guaranteed to be equivalent to this rotation
       * (same rotation matrix) if all the Jacobi rotations in this rotation _commute_ pairwise.
-      *
-      * @return
       */
     def reduced:Rotation = {
 

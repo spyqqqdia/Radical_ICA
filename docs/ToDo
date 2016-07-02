@@ -51,8 +51,7 @@ just check if the necessary angles have been found to within a set precision and
 -------------
 
 Find out why the rotation search in Radical ICA is so slow. The Vasicek entropy estimator is not at fault,
-see Log.txt.
-Why does the entropyTest fail so badly, is the theoretical entropy wrong?
+see Log.txt. Why does the entropyTest fail so badly, is the theoretical entropy wrong?
 
 #-----------------------------------------------------------------------------------
 2016-06-22A:|
@@ -95,3 +94,10 @@ __BUG__ in RadicalICATests.testCube (see LOG.txt) needs to be fixed.
 -------------
 
 Speed up the Vasicek estimator using a bin sort. Try coalescing bins until they have similar bin counts.
+
+#-----------------------------------------------------------------------------------
+2016-07-02:|
+-------------
+
+Maybe the naive should check the standard deviation of the bin counts to detect clustering and then
+increase the number of bins (say by a factor of four) at least once to adapt itself a little bit.

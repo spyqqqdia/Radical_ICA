@@ -395,6 +395,24 @@ whereas the empirical estimator is O(n) in the sample size n.
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
+    </li><li name="org.scalanlp.radical.MathTests#testEntropySpikyDist" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="testEntropySpikyDist(sampleSize:Int):Unit"></a>
+      <a id="testEntropySpikyDist(Int):Unit"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">def</span>
+      </span>
+      <span class="symbol">
+        <span class="name">testEntropySpikyDist</span><span class="params">(<span name="sampleSize">sampleSize: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Comparing the entropy estimators on a sample of size sampleSize for the following distribution P:
+P = 0.</p><div class="fullcomment"><div class="comment cmt"><p>Comparing the entropy estimators on a sample of size sampleSize for the following distribution P:
+P = 0.5*Unif(0,1)+0.5*Unif(0,0.0001) with density
+f(u) = 0.5*(1+1/0.0001) on [0,0.0001] and f(u)=0.5 on the remaining interval.
+The spike at the left endpoint is a problem for the naive estimator with equal width bins.
+</p></div></div>
     </li><li name="scala.AnyRef#toString" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="toString():String"></a>
       <a id="toString():String"></a>
