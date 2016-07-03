@@ -5,10 +5,8 @@ import junit.framework.TestCase
 import org.junit.Assert._
 import java.util.Random
 
-import breeze.linalg.{DenseMatrix, DenseVector, eigSym, svd, max => bn_max}
-import breeze.numerics.{abs => bn_abs}
-import breeze.stats.distributions.Rand
-
+import breeze.linalg.{DenseMatrix, DenseVector}
+import breeze.stats.distributions.{ContinuousDistr,Uniform}
 import scala.collection.mutable.ListBuffer
 
 /**
@@ -27,16 +25,17 @@ class RadicalICATests {
         val paddedData = RadicalICA.pad(data,3,0.1);
         System.out.println(MathTools.applyFcn(paddedData,(u:Double)=>MathTools.round(u,2)));
     }
-    /** Data (sample size: sampleSize/40, padded size: sampleSize) are uniformly distributed in a d-dimensional cube
-      * [-a,a]x[-a,a]x...x[-a,a]
-      * (even dimension d) where a=sqrt(3) so that the data are white.
+    /**
+      * The test allocates a data sample of the type [[DataGenerator.rotatedWhitenedSample]] with
+      * rotation rot rotating the sample by -0.7 radians in non interacting dimensions (0,1),(2,3),...(d-2,d-1).
+      * Here d=dim=coordinateDistributions.size is the data dimension.
       *
-      * The data are then rotated by -0.7 radians in non interacting dimensions (0,1),(2,3),...(d-2,d-1)
-      * and Radical ICA is carried out without whitening (so that the whitening matrix does not
-      * introduce further rotation).
+      * With this the demixing rotation is uniquely determined  and must rotate by 0.7 radians in the same
+      * dimensions (0,1), (2,3),...,(d-2,d-1).
+      * Radical ICA is now carried out and we check if the reverse rotations are all discovered. Note that the
+      * rotation matrix is very sparse.
       *
-      * In this case the demixing rotation is uniquely determined  and must rotate by 0.7 radians in the same
-      * dimensions (0,1), (2,3),...,(d-2,d-1). In verbose mode we print all the Jacobi rotations of the demixing
+      * In verbose mode we print all the Jacobi rotations of the demixing
       * rotation with angle |phi| > precision so that we can check how close we are to this solution.
       *
       * Because of sampling error (distribution of the sample deviates from the true distribution generating the sample)
@@ -44,14 +43,15 @@ class RadicalICATests {
       * contains Jacobi rotations with angle phi off target by more than precision radians. You can set the precision
       * as a parameter.
       *
-      * In our setup the suggested default is 0.08 up to dimension 40 to avoid failure. It depends on the sample size
-      * (before and after padding).
+      * The failure threshold depends on the data dimension, the coordinate distributions and the sample size,
+      * but should be set significantly smaller than the size 0.7 of the actual Jacobi rotations.
       *
       * With this the test passes if and only if the demixing rotation contains all the Jacobi rotations
       * J(2i,2i+1,phi) with |phi-0.7| < precision and all other Jacobi rotations which it contains have angle
       * |phi| < precision.
       *
-      * @param dim  dimension of data (must be even).
+      * @param coordinateDistributions list of dim distributions assigned to components of random vector,
+      *                                must be even.
       * @param sampleSize size of padded sample (unpadded size will be sampleSize/40).
       * @param entropyEstimator  estimator for the marginal entropies. Provided are
       *                          MathTools.entropyEstimatorVasicek and MathTools.entropyEstimatorEmpirical.
@@ -63,30 +63,28 @@ class RadicalICATests {
       *
       *
       * */
-    def testCubeWithEstimator(
-            dim:Integer, sampleSize:Int, entropyEstimator:(DenseVector[Double])=>Double,
+    def testRadicalWithEstimator(
+            coordinateDistributions:List[ContinuousDistr[Double]], sampleSize:Int,
+            entropyEstimator:(DenseVector[Double])=>Double,
             doParallelSearch:Boolean, precision:Double, verbose: Boolean
-     ): Boolean = {
+    ): Boolean = {
 
-        assert(dim%2==0,"Dimension dim must be even  but is = "+dim)
+        val dim = coordinateDistributions.size
+        assert(dim%2==0,"Data dimension (coordinateDistributions.size) must be even but is = "+dim)
 
         val rot = new Rotation(dim)
         // rotate in noninteracting coordinates, so the inverse rotation is unique
         (0 until dim/2).map(i => rot.addRotation(2*i,2*i+1,-0.7))
 
-        // data uniformly distributed in [-a,a]^dim (cov(data)=(a²/3)*I, we make them white with a=sqrt(3)
-        val a = Math.sqrt(3)
-        val cube: DenseMatrix[Double] = a * (2.0 * DenseMatrix.rand[Double](dim, sampleSize/40, Rand.uniform) - 1.0)
-        val data = rot() * cube
+        val sigma = 0.15
+        val data = DataGenerator.rotatedWhitenedSample(coordinateDistributions,sampleSize,sigma,rot)
 
-        val nPad = 40
-        val sigmaPad = 0.175
         val nAngles = 100
         // important: no whitening or else the whitening matrix messes up our rotation.
         val doWhitenData = false
 
         Timer start
-        val ica = RadicalICA(data,nPad,sigmaPad,nAngles,entropyEstimator,doWhitenData,doParallelSearch,verbose)
+        val ica = RadicalICA(data,nAngles,entropyEstimator,doWhitenData,doParallelSearch,verbose)
         val W: Rotation = ica.rot
         Timer.stop
         System.out.println(Timer.report)
@@ -111,9 +109,13 @@ class RadicalICATests {
         }
         pass
     }
-    /** Does the test [[testCubeWithEstimator]] for
+    /** Does the test [[testRadicalWithEstimator]] for
       * entropyEstimator = [[MathTools.entropyEstimatorEmpiricalFast]], [[MathTools.entropyEstimatorEmpiricalAdapted]]
-      * and [[MathTools.entropyEstimatorVasicek]].
+      * and [[MathTools.entropyEstimatorVasicek]] where the distribution is Uniform(-a,a) with a=sqrt(3) (thus standard
+      * deviation = 1.0) in each coordinate.
+      *
+      * This is mainly a test of the speed of the algorithm with the various estimators. For a test with more
+      * interesting distributions see [[testRadical]].
       *
       * @param sampleSize size of padded sample (unpadded size will be sampleSize/40).
       * @param doVasicek if set to true the test will also be run with the Vasicek entropy estimator.
@@ -123,13 +125,70 @@ class RadicalICATests {
       * @param precision acceptable deviation (in radians) of angles in Jacobi rotations from theoretical optimum.
       * @param verbose if set to true prints the Jacobi angles of the demixing matrix.
       */
-    def testCube(dim:Int, sampleSize:Int, doParallelSearch:Boolean, precision:Double, doVasicek:Boolean, verbose: Boolean) = {
+    def testCube(dim:Int, sampleSize:Int, doParallelSearch:Boolean, doVasicek:Boolean, precision:Double, verbose: Boolean) = {
 
         var msg = "\nData X: uniform in d-dimensional cube [-a,a]^d with d="+dim+" and a chosen such that cov(X)=Id.\n"
         msg += "Rotating data with Jacobi rotations J(0,1,-0.7), J(2,3,-0.7),..., J(d-2,d-1,-0.7).\n"
         msg += "Note: coordinates are noninteracting with respect to these rotations.\n"
         msg += "Thus the unique product of Jacobi rotations J(i,j,phi) with angles phi in [-pi/4,pi/4]\n"
-        msg += "Undoing the data rotation consists of the inverse of these Jacobi rotations\n"
+        msg += "undoing the data rotation consists of the inverse of these Jacobi rotations\n"
+        msg += "(sign of the angle reversed).\n"
+        msg += "Our ICA algorithm must find just this rotation.\n"
+        if(verbose) {
+            msg += "We will print the rotations J(i,j,phi) found, showing only those for which "
+            msg += "|phi| > "+precision+" (radians)."
+        }
+        System.out.println(msg+"\n\n")
+
+        val a = Math.sqrt(3)
+        val dists = ListBuffer[ContinuousDistr[Double]]()
+        for(i <- 0 until dim) dists += Uniform(-a,a)
+        val coordinateDistributions = dists.toList
+
+        System.out.println("\n####-----Cube rotation test with empirical entropy estimator-----####\n")
+        var entropyEstimator = MathTools.entropyEstimatorEmpiricalFast
+        testRadicalWithEstimator(coordinateDistributions,sampleSize,entropyEstimator,doParallelSearch,precision,verbose)
+
+
+        System.out.println("\n####-----Cube rotation test with adapted empirical entropy estimator-----####\n")
+        entropyEstimator = MathTools.entropyEstimatorEmpiricalAdapted(sampleSize/50)
+        testRadicalWithEstimator(coordinateDistributions,sampleSize,entropyEstimator,doParallelSearch,precision,verbose)
+
+        if(doVasicek){
+
+            System.out.println("\n####-----Cube rotation test with Vasicek entropy estimator-----####\n")
+            val m = 200  // spacing in the Vasicek estimator appropriate for the samples in testCubeWithEstimator
+            entropyEstimator = MathTools.entropyEstimatorVasicek(m)
+            testRadicalWithEstimator(coordinateDistributions,sampleSize,entropyEstimator,doParallelSearch,precision,verbose)
+
+        }
+    }
+    /** Does the test [[testRadicalWithEstimator]] for
+      * entropyEstimator = [[MathTools.entropyEstimatorEmpiricalFast]], [[MathTools.entropyEstimatorEmpiricalAdapted]]
+      * and [[MathTools.entropyEstimatorVasicek]] where the distribution is Uniform(-a,a) with a=sqrt(3) (thus standard
+      * deviation = 1.0) in each coordinate.
+      *
+      * This is mainly a test of the speed of the algorithm with the various estimators. For a test with more
+      * interesting distributions see [[testRadical]].
+      *
+      * @param sampleSize size of padded sample (unpadded size will be sampleSize/40).
+      * @param doVasicek if set to true the test will also be run with the Vasicek entropy estimator.
+      * In high dimensions (10+) at the usual sample sizes (10000+) this is very slow. The test always runs with
+      * the fast and adapted empirical entropy estimator.
+      * @param doParallelSearch use the multithreaded version.
+      * @param precision acceptable deviation (in radians) of angles in Jacobi rotations from theoretical optimum.
+      * @param verbose if set to true prints the Jacobi angles of the demixing matrix.
+      */
+    def testRadical(
+           coordinateDistributions:List[ContinuousDistr[Double]], sampleSize:Int, doParallelSearch:Boolean,
+           doVasicek:Boolean, precision:Double, verbose: Boolean
+     ) = {
+
+        var msg = "\nData X with independent coordinates and assigned distribution in each coordinate\n"
+        msg += "are whitended and rotated with Jacobi rotations J(0,1,-0.7), J(2,3,-0.7),..., J(d-2,d-1,-0.7).\n"
+        msg += "Note: coordinates are noninteracting with respect to these rotations.\n"
+        msg += "Thus the unique product of Jacobi rotations J(i,j,phi) with angles phi in [-pi/4,pi/4]\n"
+        msg += "undoing the data rotation consists of the inverse of these Jacobi rotations\n"
         msg += "(sign of the angle reversed).\n"
         msg += "Our ICA algorithm must find just this rotation.\n"
         if(verbose) {
@@ -140,18 +199,19 @@ class RadicalICATests {
 
         System.out.println("\n####-----Cube rotation test with empirical entropy estimator-----####\n")
         var entropyEstimator = MathTools.entropyEstimatorEmpiricalFast
-        testCubeWithEstimator(dim,sampleSize,entropyEstimator,doParallelSearch,precision,verbose)
+        testRadicalWithEstimator(coordinateDistributions,sampleSize,entropyEstimator,doParallelSearch,precision,verbose)
+
 
         System.out.println("\n####-----Cube rotation test with adapted empirical entropy estimator-----####\n")
         entropyEstimator = MathTools.entropyEstimatorEmpiricalAdapted(sampleSize/50)
-        testCubeWithEstimator(dim,sampleSize,entropyEstimator,doParallelSearch,precision,verbose)
+        testRadicalWithEstimator(coordinateDistributions,sampleSize,entropyEstimator,doParallelSearch,precision,verbose)
 
         if(doVasicek){
 
             System.out.println("\n####-----Cube rotation test with Vasicek entropy estimator-----####\n")
             val m = 200  // spacing in the Vasicek estimator appropriate for the samples in testCubeWithEstimator
             entropyEstimator = MathTools.entropyEstimatorVasicek(m)
-            testCubeWithEstimator(dim,sampleSize,entropyEstimator,doParallelSearch,precision,verbose)
+            testRadicalWithEstimator(coordinateDistributions,sampleSize,entropyEstimator,doParallelSearch,precision,verbose)
 
         }
     }

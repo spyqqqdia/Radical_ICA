@@ -92,7 +92,7 @@ Note that the Y_i-sample is the the i-th row of the data matrix Y.</p><p>Recomme
         <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
               <ol><li name="org.scalanlp.radical.RadicalICA#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="&lt;init&gt;(data:breeze.linalg.DenseMatrix[Double],nPad:Integer,sigmaPad:Double,nAngles:Integer,entropyEstimator:breeze.linalg.DenseVector[Double]=&gt;Double,doWhitenData:Boolean,doParallelSearch:Boolean,verbose:Boolean):org.scalanlp.radical.RadicalICA"></a>
+      <a id="&lt;init&gt;(data:breeze.linalg.DenseMatrix[Double],nAngles:Integer,entropyEstimator:breeze.linalg.DenseVector[Double]=&gt;Double,doWhitenData:Boolean,doParallelSearch:Boolean,verbose:Boolean):org.scalanlp.radical.RadicalICA"></a>
       <a id="&lt;init&gt;:RadicalICA"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -100,11 +100,12 @@ Note that the Y_i-sample is the the i-th row of the data matrix Y.</p><p>Recomme
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">RadicalICA</span><span class="params">(<span name="data">data: <span class="extype" name="breeze.linalg.DenseMatrix">DenseMatrix</span>[<span class="extype" name="scala.Double">Double</span>]</span>, <span name="nPad">nPad: <span class="extype" name="java.lang.Integer">Integer</span></span>, <span name="sigmaPad">sigmaPad: <span class="extype" name="scala.Double">Double</span></span>, <span name="nAngles">nAngles: <span class="extype" name="java.lang.Integer">Integer</span></span>, <span name="entropyEstimator">entropyEstimator: (<span class="extype" name="breeze.linalg.DenseVector">DenseVector</span>[<span class="extype" name="scala.Double">Double</span>]) ⇒ <span class="extype" name="scala.Double">Double</span></span>, <span name="doWhitenData">doWhitenData: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>, <span name="doParallelSearch">doParallelSearch: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>, <span name="verbose">verbose: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span>
+        <span class="name">RadicalICA</span><span class="params">(<span name="data">data: <span class="extype" name="breeze.linalg.DenseMatrix">DenseMatrix</span>[<span class="extype" name="scala.Double">Double</span>]</span>, <span name="nAngles">nAngles: <span class="extype" name="java.lang.Integer">Integer</span></span>, <span name="entropyEstimator">entropyEstimator: (<span class="extype" name="breeze.linalg.DenseVector">DenseVector</span>[<span class="extype" name="scala.Double">Double</span>]) ⇒ <span class="extype" name="scala.Double">Double</span></span>, <span name="doWhitenData">doWhitenData: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>, <span name="doParallelSearch">doParallelSearch: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">true</span></span>, <span name="verbose">verbose: <span class="extype" name="scala.Boolean">Boolean</span> = <span class="symbol">false</span></span>)</span>
       </span>
       </h4>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>sample of multidimensional distribution, each column is one random value of the
-             distribution.</p></dd><dt class="param">nPad</dt><dd class="cmt"><p>number of times each data vector is perturbed and repeated.</p></dd><dt class="param">sigmaPad</dt><dd class="cmt"><p>standard deviation of normally distributed perturbations.</p></dd><dt class="param">nAngles</dt><dd class="cmt"><p>number of equidistant grid points in [-pi/4,pi/4] scanned for optimal angles alpha of the
+             distribution. Samplesize needs to be 10000+, use <a href="DataGenerator$.html#smoothMultiDimensionalData(sample:breeze.linalg.DenseMatrix[Double],nPad:Int,sigma:Double):breeze.linalg.DenseMatrix[Double]" class="extmbr" name="org.scalanlp.radical.DataGenerator#smoothMultiDimensionalData">DataGenerator.smoothMultiDimensionalData</a>
+             to increase the sample size if needed.</p></dd><dt class="param">nAngles</dt><dd class="cmt"><p>number of equidistant grid points in [-pi/4,pi/4] scanned for optimal angles alpha of the
                Jacobi rotations.</p></dd><dt class="param">entropyEstimator</dt><dd class="cmt"><p>estimator for the marginal entropies. Provided are
      <a href="MathTools$.html#entropyEstimatorVasicek(m:Int):breeze.linalg.DenseVector[Double]=&gt;Double" class="extmbr" name="org.scalanlp.radical.MathTools#entropyEstimatorVasicek">MathTools.entropyEstimatorVasicek</a>, <a href="MathTools$.html#entropyEstimatorEmpiricalAdapted(nBins:Int):breeze.linalg.DenseVector[Double]=&gt;Double" class="extmbr" name="org.scalanlp.radical.MathTools#entropyEstimatorEmpiricalAdapted">MathTools.entropyEstimatorEmpiricalAdapted</a> and
      <a href="MathTools$.html#entropyEstimatorEmpiricalFast:breeze.linalg.DenseVector[Double]=&gt;Double" class="extmbr" name="org.scalanlp.radical.MathTools#entropyEstimatorEmpiricalFast">MathTools.entropyEstimatorEmpiricalFast</a>
@@ -220,7 +221,7 @@ strongly clustered data (spiky densities).
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="org.scalanlp.radical.RadicalICA#data" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+    </li><li name="org.scalanlp.radical.RadicalICA#data" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="data:breeze.linalg.DenseMatrix[Double]"></a>
       <a id="data:DenseMatrix[Double]"></a>
       <h4 class="signature">
@@ -233,7 +234,9 @@ strongly clustered data (spiky densities).
       </span>
       </h4>
       <p class="shortcomment cmt">sample of multidimensional distribution, each column is one random value of the
-             distribution.</p>
+             distribution.</p><div class="fullcomment"><div class="comment cmt"><p>sample of multidimensional distribution, each column is one random value of the
+             distribution. Samplesize needs to be 10000+, use <a href="DataGenerator$.html#smoothMultiDimensionalData(sample:breeze.linalg.DenseMatrix[Double],nPad:Int,sigma:Double):breeze.linalg.DenseMatrix[Double]" class="extmbr" name="org.scalanlp.radical.DataGenerator#smoothMultiDimensionalData">DataGenerator.smoothMultiDimensionalData</a>
+             to increase the sample size if needed.</p></div></div>
     </li><li name="org.scalanlp.radical.RadicalICA#dim" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="dim:Int"></a>
       <a id="dim:Int"></a>
@@ -424,19 +427,6 @@ matrix as product of the optimal Jacobi rotations, parallelized version.</p>
       </h4>
       <p class="shortcomment cmt">number of equidistant grid points in [-pi/4,pi/4] scanned for optimal angles alpha of the
                Jacobi rotations.</p>
-    </li><li name="org.scalanlp.radical.RadicalICA#nPad" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="nPad:Integer"></a>
-      <a id="nPad:Integer"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">nPad</span><span class="result">: <span class="extype" name="java.lang.Integer">Integer</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">number of times each data vector is perturbed and repeated.</p>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
@@ -496,19 +486,6 @@ to pi/4.
 </p></div><dl class="paramcmts block"><dt class="param">X</dt><dd class="cmt"><p>workspace for rotation of whitened data.</p></dd><dt>returns</dt><dd class="cmt"><p>Ordered pair (phi_opt,dCF) where phi is the optimal angle of rotation and dCF the (additive)
         change in contrast function when ths rotation is applied to the data.
 </p></dd></dl></div>
-    </li><li name="org.scalanlp.radical.RadicalICA#paddedData" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="paddedData:breeze.linalg.DenseMatrix[Double]"></a>
-      <a id="paddedData:DenseMatrix[Double]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">paddedData</span><span class="result">: <span class="extype" name="breeze.linalg.DenseMatrix">DenseMatrix</span>[<span class="extype" name="scala.Double">Double</span>]</span>
-      </span>
-      </h4>
-      
     </li><li name="org.scalanlp.radical.RadicalICA#parallelAngleSearch" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="parallelAngleSearch(i:Int,j:Int,dPhi:Double,p:Int,nThread:Int,X:breeze.linalg.DenseMatrix[Double],entropies:breeze.linalg.DenseVector[Double]):scala.concurrent.Future[(Double,Double)]"></a>
       <a id="parallelAngleSearch(Int,Int,Double,Int,Int,DenseMatrix[Double],DenseVector[Double]):Future[(Double,Double)]"></a>
@@ -555,19 +532,6 @@ i.e. K equidistant points. The future number p searches all angles</p><p>   phi 
       </span>
       </h4>
       
-    </li><li name="org.scalanlp.radical.RadicalICA#sigmaPad" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="sigmaPad:Double"></a>
-      <a id="sigmaPad:Double"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">sigmaPad</span><span class="result">: <span class="extype" name="scala.Double">Double</span></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">standard deviation of normally distributed perturbations.</p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>

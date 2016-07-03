@@ -1,6 +1,6 @@
 package org.scalanlp.radical
 
-import breeze.linalg.{Axis, DenseMatrix, DenseVector, eigSym, sum}
+import breeze.linalg.DenseVector
 import breeze.stats.{mean, variance}
 import breeze.stats.distributions._
 
@@ -49,7 +49,7 @@ object MathTests {
       * @param dist: a continuous distribution
       * @param entropy: entropy of the distribution
       * @param sigmaPad: standard deviation of normal distribution used in padding (convolution),
-      *                  see [[MathTools.pad]]
+      *                  see [[DataGenerator.smoothOneDimensionalData]]
       * @return pair (resultsVasicek,resultsEmpirical) where
       *     resultsVasicek = (
       *        cDist.toString(), "Vasicek", entropy(cDist), meanEstimate, sdEstimate, meanEstimatePadded, sdEstimatePadded
@@ -72,7 +72,7 @@ object MathTests {
 
             val s = dist.sample(sampleSize)
             val sample = DenseVector.tabulate(sampleSize){i => s(i)}    // turn s into vector
-            val samplePadded = MathTools.pad(sample(0 until (sampleSize/10)),10,sigmaPad)
+            val samplePadded = DataGenerator.smoothOneDimensionalData(sample(0 until (sampleSize/10)),10,sigmaPad)
             val m = Math.sqrt(sampleSize).toInt
             entropies(i) = MathTools.entropyEstimateVasicek(sample,m)
             entropiesP(i) = MathTools.entropyEstimateVasicek(samplePadded,m)
@@ -99,7 +99,7 @@ object MathTests {
 
             val s = dist.sample(sampleSize)
             val sample = DenseVector.tabulate(sampleSize){i => s(i)}    // turn s into vector
-            val samplePadded = MathTools.pad(sample(0 until (sampleSize/10)),10,sigmaPad)
+            val samplePadded = DataGenerator.smoothOneDimensionalData(sample(0 until (sampleSize/10)),10,sigmaPad)
             entropies(i) = MathTools.entropyEstimateEmpiricalFast(sample)
             entropiesP(i) = MathTools.entropyEstimateEmpiricalFast(samplePadded)
         })

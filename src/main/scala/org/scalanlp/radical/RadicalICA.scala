@@ -43,9 +43,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
   *              nAngles = 100
   *
   * @param data sample of multidimensional distribution, each column is one random value of the
-  *              distribution.
-  * @param nPad number of times each data vector is perturbed and repeated.
-  * @param sigmaPad standard deviation of normally distributed perturbations.
+  *              distribution. Samplesize needs to be 10000+, use [[DataGenerator.smoothMultiDimensionalData]]
+  *              to increase the sample size if needed.
   * @param nAngles number of equidistant grid points in [-pi/4,pi/4] scanned for optimal angles alpha of the
   *                Jacobi rotations.
   * @param entropyEstimator estimator for the marginal entropies. Provided are
@@ -61,8 +60,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
   */
 class RadicalICA(
             val data:DenseMatrix[Double],
-            val nPad:Integer,
-            val sigmaPad:Double,
             val nAngles:Integer,
             val entropyEstimator:(DenseVector[Double])=>Double,
             val doWhitenData:Boolean = true,
@@ -71,8 +68,7 @@ class RadicalICA(
 ){
     val pi = 3.1415926535897932
     val dim = data.rows
-    val paddedData = RadicalICA.pad(data,nPad,sigmaPad)    // padded, white data
-    val whiteData = if(doWhitenData) RadicalICA.whiten(paddedData) else paddedData
+    val whiteData = if(doWhitenData) RadicalICA.whiten(data) else data
 
     val rot:Rotation = if(doParallelSearch)
                             findOptimalRotationPar(verbose)
@@ -302,9 +298,7 @@ object RadicalICA {
       * Factory function for allocating RadicalICA objects.
       *
       * @param data sample of multidimensional distribution, each column is one random value of the
-        *              distribution.
-      * @param nPad number of times each data vector is perturbed and repeated.
-      * @param sigmaPad standard deviation of normally distributed perturbations.
+      *              distribution.
       * @param nAngles number of equidistant grid points in [-pi/4,pi/4] scanned for optimal angles alpha
       *                of the Jacobi rotations.
       * @param entropyEstimator estimator for the marginal entropies. Provided are
@@ -318,14 +312,12 @@ object RadicalICA {
       *      the sequential version exists only for testing and debugging.
       */
     def apply(   data:DenseMatrix[Double],
-                 nPad:Integer,
-                 sigmaPad:Double,
                  nAngles:Integer,
                  entropyEstimator: (DenseVector[Double])=>Double,
                  doWhitenData:Boolean,
                  doParallelSearch:Boolean,
                  verbose:Boolean
-    ) = new RadicalICA(data, nPad, sigmaPad, nAngles, entropyEstimator, doWhitenData, doParallelSearch, verbose)
+    ) = new RadicalICA(data, nAngles, entropyEstimator, doWhitenData, doParallelSearch, verbose)
 
     def whiten(data:DenseMatrix[Double]):DenseMatrix[Double] = MatrixFunction.whiten(data)
 

@@ -42,8 +42,11 @@ object Runner {
         val doVasicek = true
         val doParallelSearch =true
         val verbose = true
-        radICATests.testCube(dim,sampleSize,doParallelSearch,precision,doVasicek,verbose)
+        // radICATests.testCube(dim,sampleSize,doParallelSearch,doVasicek,precision,verbose)
 
+
+        val coordinateDistributions = DataGenerator.distributionList
+        radICATests.testRadical(coordinateDistributions,sampleSize,doParallelSearch,doVasicek,precision,verbose)
 
     }
 }

@@ -158,6 +158,19 @@ Added AdaptedHistogram and entropy estimator based on this. Added MathTests.test
 for an example where the naive entropy estimation fails badly. Added ContinuousMixtureDistribution to get this
 example.
 
+#-----------------------------------------------------------------------------------
+2016-07-03:|
+-------------
+
+Moved data padding out of the RadicalICA class. The user must do it himself.
+New class DataGenerator does data padding, delivers test sample data.
+Added BiExponential distribution.
+
+Reorganized RadicalICATests based on samples provided by DataGenerator. New test with arbitrary
+distributions in the coordinates.
+
+
+
 
 
 

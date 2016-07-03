@@ -12,8 +12,6 @@ import breeze.numerics._
 object MathTools {
 
 
-    val rnorm = new breeze.stats.distributions.Gaussian(0,1)
-
     val pi = 3.1415926535897932
 
     /** Beta(a,b)=gamma(a)gamma(b)/gamma(a+b).*/
@@ -165,20 +163,6 @@ object MathTools {
       */
     def meanGamma(shape:Double,scale:Double) = shape*scale
 
-
-    /** Repeat each entry in sample nPad ties while adding a N(0,sigma²) draw to it.
-      * What this means is that we smooth the sample by convolution with N(0,sigma²*I), where I is
-      * the identity matrix in the same dimension as the sample.
-      *
-      */
-    def pad(sample:DenseVector[Double], nPad:Int, sigma:Double):DenseVector[Double] = {
-
-        val n = sample.length*nPad
-        val res = DenseVector.zeros[Double](n)
-        var i=0
-        while(i<n){ res(i) = sample(i%sample.length)+sigma*rnorm.draw(); i+=1 }
-        res
-    }
 
     /** @return value y=f(x) from linear interpolation of
       *  values (x1,y1=f(x1)), (x2,y2=f(x2))

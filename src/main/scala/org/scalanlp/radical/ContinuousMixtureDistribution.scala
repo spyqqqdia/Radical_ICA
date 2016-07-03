@@ -24,7 +24,7 @@ extends ContinuousDistr[Double] {
     // should really use machine epsilon
     if(!(weights.sum==1.0)) {
 
-        val message = "Weights not adding up tp one, weights.sum = "+weights.sum + ".\n"
+        val message = "Weights not adding up to one, weights.sum = "+weights.sum + ".\n"
         throw new IllegalArgumentException(message)
     }
     {
