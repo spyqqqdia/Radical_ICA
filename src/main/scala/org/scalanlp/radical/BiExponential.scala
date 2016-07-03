@@ -1,7 +1,7 @@
 package org.scalanlp.radical
 
 import breeze.stats.distributions.{Exponential, ContinuousDistr, Rand, RandBasis}
-import org.apache.commons.math3.random.MersenneTwister
+
 
 /**
   * Created by oar on 7/3/16.
@@ -24,9 +24,9 @@ class BiExponential(rate:Double)(implicit basis: RandBasis = Rand) extends Conti
         throw new IllegalArgumentException(msg)
     }
 
-    // density will already be defined in normalized form
+    // density f(x) = (rate/2)*exp(-rate*|x|)
     override def logNormalizer = Math.log(2.0/rate)
-    /** This is the logarithm of the density (already normalized). */
+    /** This is the logarithm of the unnormalized density. */
     override def unnormalizedLogPdf(x:Double): Double = -rate*Math.abs(x)
     override def draw():Double = {
 
@@ -37,7 +37,6 @@ class BiExponential(rate:Double)(implicit basis: RandBasis = Rand) extends Conti
 }
 object BiExponential {
 
-    implicit val basis = new RandBasis(new MersenneTwister())
     /** Factory method.*/
     def apply(rate:Double) = new BiExponential(rate)
 
