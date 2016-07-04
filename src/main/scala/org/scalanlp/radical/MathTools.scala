@@ -203,7 +203,7 @@ object MathTools {
     }
     final def round(u:Double,decimals:Int):Double = {
         val f=(1 until decimals).foldLeft(10.0)((v:Double,k:Int)=>10*v)   // 10^decimals
-        (u*f).toInt/f
+        Math.floor(u*f)/f
     }
     final def round(v:DenseVector[Double],decimals:Int):DenseVector[Double] = applyFcn(v,(u:Double)=>round(u,decimals))
     final def round(M:DenseMatrix[Double],decimals:Int):DenseMatrix[Double] = applyFcn(M,(u:Double)=>round(u,decimals))
