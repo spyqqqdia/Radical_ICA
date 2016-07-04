@@ -40,18 +40,28 @@
       </h4>
       
           <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Created by oar on 6/3/16.
-Class to perform the ICA analysis (i.e. find the rotation of the data which minimizes the contrast function)
-described in docs/RADICAL_ICA.pdf</p><p>The data are whitened and then padded: each item in the whitened sample is multiplied nPad times with
-small random perturbations drawn independently from N(0,sigma²) in each coordinate.
-This means that the sample distribution is convolved with the multinormal distribution N(0,sigma²I),
-where I is the identity matrix of the same dimension as the data.</p><p>This smooths over sample idiosyncracies which can lead to spurious minima in the contrast function,
-see docs/RADICAL_ICA.pdf, p3, section 3).</p><p>Let Y denote the rotated (whitened and padded) data sample X. As contrast function F(Y) we use the
-Kullback-Leibler distance of the empirical distribution of Y from the product of the marginal distributions
-(distance from independence). It can be shown that</p><p>   F(Y) = const + sum_i entropy(Y_i),</p><p>where Y_i denotes the i-th coordinate of the random vector Y.
+Class to perform the ICA analysis on a data sample X as described in docs/RADICAL_ICA.pdf</p><p>The model for the data X is as follows: X=AS, where S is a random vector with independent components
+and A an invertible linear transformation (i.e. matrix). The components S_i of S are called the &quot;sources&quot;
+and A is called the mixing matrix. You are interested in the demixing matrix B=inv(A) with which you recover
+the sources S from the data X as S=BX.</p><p>The algorithm proceeds as follows: the data are whitened and then padded:
+each item in the whitened sample is multiplied nPad times and then a small random perturbation
+drawn independently from N(0,sigma²) in each coordinate is added to it.</p><p>This means that the sample distribution is convolved with the multinormal distribution N(0,sigma²I),
+where I is the identity matrix of the same dimension as the data.
+This smooths over sample idiosyncracies which can lead to spurious minima in the contrast function,
+see docs/RADICAL_ICA.pdf, p3, section 3).</p><p>Let XX denote the padded data and Y=QXX the whitened data sample, where Q is an invertible matrix such that
+cov(Y)=I, the identity matrix (the augmented data matrix XX is of full rank with probability one).</p><p>The algorithm now looks for a _rotation_ W such that the vector Z=WY has independent components.
+To find such W it minimizes a contrast function F=F(W) which is the Kullback-Leibler distance of
+the empirical distribution of Z from the product of the marginal distributions (distance from independence).
+It can be shown that</p><p>   F(Y) = const + sum_i entropy(Y_i),</p><p>where Y_i denotes the i-th coordinate of the random vector Y.
 Thus the algorithm tries to find the rotation W such that Y=WX minimizes the sum of the entropies
 H_i=H(Y_i)=entropy(Y_i).
-Note that the Y_i-sample is the the i-th row of the data matrix Y.</p><p>Recommended defaults:</p><p>             nPad: size of padded sample should be at least 10000</p><p>             sigmaPad = 0.175 (if the algorithm operates on whitened data)</p><p>             m = sqrt(N), where N is the size of the padded sample</p><p>             nAngles = 100
-</p></div><div class="toggleContainer block">
+Note that the Y_i-sample is the the i-th row of the data matrix Y.</p><p>The algorithm needs samples of large size (10000+). It is left to you to pad the data to this size using the
+function <a href="DataGenerator$.html#smoothMultiDimensionalData(sample:breeze.linalg.DenseMatrix[Double],nPad:Int,sigma:Double):breeze.linalg.DenseMatrix[Double]" class="extmbr" name="org.scalanlp.radical.DataGenerator#smoothMultiDimensionalData">DataGenerator.smoothMultiDimensionalData</a>. The reason this is not built into the algorithm is that it
+interferes with some tests.</p><p>Currently the demixing matrix B is not computed, only the optimal rotation W. This will soon be
+rectified. You can get around this for now by whitening the data yourself Y = QX. Then Z=WY, thus inv(W)Z=Y=QX
+and so
+                              X = inv(Q)inv(W)Z = inv(Q)W'Z,</p><p> where Z has &quot;independent&quot; components and so we can take S=Z and B=inv(Q)W' with the prime denoting
+ transposition as usual.</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -106,7 +116,7 @@ Note that the Y_i-sample is the the i-th row of the data matrix Y.</p><p>Recomme
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>sample of multidimensional distribution, each column is one random value of the
              distribution. Samplesize needs to be 10000+, use <a href="DataGenerator$.html#smoothMultiDimensionalData(sample:breeze.linalg.DenseMatrix[Double],nPad:Int,sigma:Double):breeze.linalg.DenseMatrix[Double]" class="extmbr" name="org.scalanlp.radical.DataGenerator#smoothMultiDimensionalData">DataGenerator.smoothMultiDimensionalData</a>
              to increase the sample size if needed.</p></dd><dt class="param">nAngles</dt><dd class="cmt"><p>number of equidistant grid points in [-pi/4,pi/4] scanned for optimal angles alpha of the
-               Jacobi rotations.</p></dd><dt class="param">entropyEstimator</dt><dd class="cmt"><p>estimator for the marginal entropies. Provided are
+               Jacobi rotations (100 should be enough).</p></dd><dt class="param">entropyEstimator</dt><dd class="cmt"><p>estimator for the marginal entropies. Provided are
      <a href="MathTools$.html#entropyEstimatorVasicek(m:Int):breeze.linalg.DenseVector[Double]=&gt;Double" class="extmbr" name="org.scalanlp.radical.MathTools#entropyEstimatorVasicek">MathTools.entropyEstimatorVasicek</a>, <a href="MathTools$.html#entropyEstimatorEmpiricalAdapted(nBins:Int):breeze.linalg.DenseVector[Double]=&gt;Double" class="extmbr" name="org.scalanlp.radical.MathTools#entropyEstimatorEmpiricalAdapted">MathTools.entropyEstimatorEmpiricalAdapted</a> and
      <a href="MathTools$.html#entropyEstimatorEmpiricalFast:breeze.linalg.DenseVector[Double]=&gt;Double" class="extmbr" name="org.scalanlp.radical.MathTools#entropyEstimatorEmpiricalFast">MathTools.entropyEstimatorEmpiricalFast</a>
 listed from slowest and most precise to fastest and least precise. The last estimator can fail badly on
@@ -426,7 +436,7 @@ matrix as product of the optimal Jacobi rotations, parallelized version.</p>
       </span>
       </h4>
       <p class="shortcomment cmt">number of equidistant grid points in [-pi/4,pi/4] scanned for optimal angles alpha of the
-               Jacobi rotations.</p>
+               Jacobi rotations (100 should be enough).</p>
     </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>

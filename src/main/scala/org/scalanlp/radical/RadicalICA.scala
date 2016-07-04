@@ -10,20 +10,29 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   * Created by oar on 6/3/16.
-  * Class to perform the ICA analysis (i.e. find the rotation of the data which minimizes the contrast function)
-  * described in docs/RADICAL_ICA.pdf
+  * Class to perform the ICA analysis on a data sample X as described in docs/RADICAL_ICA.pdf
   *
-  * The data are whitened and then padded: each item in the whitened sample is multiplied nPad times with
-  * small random perturbations drawn independently from N(0,sigma²) in each coordinate.
+  * The model for the data X is as follows: X=AS, where S is a random vector with independent components
+  * and A an invertible linear transformation (i.e. matrix). The components S_i of S are called the "sources"
+  * and A is called the mixing matrix. You are interested in the demixing matrix B=inv(A) with which you recover
+  * the sources S from the data X as S=BX.
+  *
+  * The algorithm proceeds as follows: the data are whitened and then padded:
+  * each item in the whitened sample is multiplied nPad times and then a small random perturbation
+  * drawn independently from N(0,sigma²) in each coordinate is added to it.
+  *
   * This means that the sample distribution is convolved with the multinormal distribution N(0,sigma²I),
   * where I is the identity matrix of the same dimension as the data.
-  *
   * This smooths over sample idiosyncracies which can lead to spurious minima in the contrast function,
   * see docs/RADICAL_ICA.pdf, p3, section 3).
   *
-  * Let Y denote the rotated (whitened and padded) data sample X. As contrast function F(Y) we use the
-  * Kullback-Leibler distance of the empirical distribution of Y from the product of the marginal distributions
-  * (distance from independence). It can be shown that
+  * Let XX denote the padded data and Y=QXX the whitened data sample, where Q is an invertible matrix such that
+  * cov(Y)=I, the identity matrix (the augmented data matrix XX is of full rank with probability one).
+  *
+  * The algorithm now looks for a _rotation_ W such that the vector Z=WY has independent components.
+  * To find such W it minimizes a contrast function F=F(W) which is the Kullback-Leibler distance of
+  * the empirical distribution of Z from the product of the marginal distributions (distance from independence).
+  * It can be shown that
   *
   *    F(Y) = const + sum_i entropy(Y_i),
   *
@@ -32,21 +41,25 @@ import scala.concurrent.ExecutionContext.Implicits.global
   * H_i=H(Y_i)=entropy(Y_i).
   * Note that the Y_i-sample is the the i-th row of the data matrix Y.
   *
-  * Recommended defaults:
+  * The algorithm needs samples of large size (10000+). It is left to you to pad the data to this size using the
+  * function [[DataGenerator.smoothMultiDimensionalData]]. The reason this is not built into the algorithm is that it
+  * interferes with some tests.
   *
-  *              nPad: size of padded sample should be at least 10000
+  * Currently the demixing matrix B is not computed, only the optimal rotation W. This will soon be
+  * rectified. You can get around this for now by whitening the data yourself Y = QX. Then Z=WY, thus inv(W)Z=Y=QX
+  * and so
+  *                               X = inv(Q)inv(W)Z = inv(Q)W'Z,
   *
-  *              sigmaPad = 0.175 (if the algorithm operates on whitened data)
+  *  where Z has "independent" components and so we can take S=Z and B=inv(Q)W' with the prime denoting
+  *  transposition as usual.
   *
-  *              m = sqrt(N), where N is the size of the padded sample
   *
-  *              nAngles = 100
   *
   * @param data sample of multidimensional distribution, each column is one random value of the
   *              distribution. Samplesize needs to be 10000+, use [[DataGenerator.smoothMultiDimensionalData]]
   *              to increase the sample size if needed.
   * @param nAngles number of equidistant grid points in [-pi/4,pi/4] scanned for optimal angles alpha of the
-  *                Jacobi rotations.
+  *                Jacobi rotations (100 should be enough).
   * @param entropyEstimator estimator for the marginal entropies. Provided are
   *      [[MathTools.entropyEstimatorVasicek]], [[MathTools.entropyEstimatorEmpiricalAdapted]] and
   *      [[MathTools.entropyEstimatorEmpiricalFast]]

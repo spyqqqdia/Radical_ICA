@@ -1,8 +1,10 @@
 package org.scalanlp.radical
 
-import breeze.linalg.DenseVector
+import breeze.linalg.{DenseMatrix, DenseVector,max}
+import breeze.numerics._
 import breeze.stats.{mean, variance}
 import breeze.stats.distributions._
+
 
 
 /**
@@ -270,6 +272,17 @@ object MathTests {
 
         print(message)
 
+    }
+
+
+    /** check if A'A yields a symmetric matrix */
+    def testSymmetry(m:Int): Unit ={
+
+        val A = DenseMatrix.rand[Double](m,m)
+        print("Testing symmetry of C=A*At: ")
+        val S = A.t*A
+        val diff = max(abs(S-S.t))
+        print("||C-C.t||_oo = "+diff)
     }
 
 
