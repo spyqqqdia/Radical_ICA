@@ -29,7 +29,7 @@ object MatrixFunction {
       */
     def cov(A:DenseMatrix[Double]):DenseMatrix[Double] = {
 
-        // set mean col vector to zero
+        // set mean of columns ( = vector of row means) to zero
         val n = A.cols
         val D:DenseMatrix[Double] = A.copy
         val mu:DenseVector[Double] = sum(D,Axis._1):*(1.0/n)    // sum along rows --> col vector

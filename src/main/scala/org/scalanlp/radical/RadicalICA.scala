@@ -56,7 +56,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
   *
   *
   * @param data sample of multidimensional distribution, each column is one random value of the
-  *              distribution. Samplesize needs to be 10000+, use [[DataGenerator.smoothMultiDimensionalData]]
+  *              distribution. Sample size needs to be 10000+, use [[DataGenerator.smoothMultiDimensionalData]]
   *              to increase the sample size if needed.
   * @param nAngles number of equidistant grid points in [-pi/4,pi/4] scanned for optimal angles alpha of the
   *                Jacobi rotations (100 should be enough).
