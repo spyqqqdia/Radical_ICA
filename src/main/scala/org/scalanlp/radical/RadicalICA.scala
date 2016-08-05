@@ -26,7 +26,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
   * This smooths over sample idiosyncracies which can lead to spurious minima in the contrast function,
   * see docs/RADICAL_ICA.pdf, p3, section 3).
   *
-  * Let XX denote the padded data and Y=QXX the whitened data sample, where Q is an invertible matrix such that
+  * Let pX denote the padded data and Y=QpX the whitened data sample, where Q is an invertible matrix such that
   * cov(Y)=I, the identity matrix (the augmented data matrix XX is of full rank with probability one).
   *
   * The algorithm now looks for a _rotation_ W such that the vector Z=WY has independent components.
@@ -41,23 +41,23 @@ import scala.concurrent.ExecutionContext.Implicits.global
   * H_i=H(Y_i)=entropy(Y_i).
   * Note that the Y_i-sample is the the i-th row of the data matrix Y.
   *
-  * The algorithm needs samples of large size (10000+). It is left to you to pad the data to this size using the
-  * function [[DataGenerator.smoothMultiDimensionalData]]. The reason this is not built into the algorithm is that it
-  * interferes with some tests.
+  * The algorithm needs samples of large size (10000+). The usual implementation automatically pads the data and then
+  * whitens the resulting sample. This procedure interferes with some of our tests.
   *
-  * Currently the demixing matrix B is not computed, only the optimal rotation W. This will soon be
-  * rectified. You can get around this for now by whitening the data yourself Y = QX. Then Z=WY, thus inv(W)Z=Y=QX
-  * and so
-  *                               X = inv(Q)inv(W)Z = inv(Q)W'Z,
+  * The tests rotate a set of independent signals by a given rotation U and check if the rotation V computed by the
+  * algorithm reverses the rotation U. In general one can only guarantee that UV and VU must be permutation matrices.
+  * If U is a product of Jacobi rotations J in non interacting (disjoint) coordinate pairs (i,j) (and thus necessarily
+  * fairly sparse), then V has to reverse the rotations J one by one and some tests check this behaviour.
   *
-  *  where Z has "independent" components and so we can take S=Z and B=inv(Q)W' with the prime denoting
-  *  transposition as usual.
-  *
-  *
+  * For some of the tests to work properly the rotation U has to be applied after padding and whitening.
+  * For this reason we include a switch to turn off whitening. It is then assumed that the data are white.
+  * Likewise it is left to you to pad the data sample to reasonable size using the function
+  * DataGenerator.smoothMultiDimensionalData. In this fashion we can run the tests on large white test data samples
+  * which are not padded.
   *
   * @param data sample of multidimensional distribution, each column is one random value of the
-  *              distribution. Sample size needs to be 10000+, use [[DataGenerator.smoothMultiDimensionalData]]
-  *              to increase the sample size if needed.
+  *              distribution, each row a sample of a coordinate variable. Sample size needs to be 10000+,
+  *              use [[DataGenerator.smoothMultiDimensionalData]] to increase the sample size if needed.
   * @param nAngles number of equidistant grid points in [-pi/4,pi/4] scanned for optimal angles alpha of the
   *                Jacobi rotations (100 should be enough).
   * @param entropyEstimator estimator for the marginal entropies. Provided are
@@ -81,26 +81,29 @@ class RadicalICA(
 ){
     val pi = 3.1415926535897932
     val dim = data.rows
-    val whiteData = if(doWhitenData) RadicalICA.whiten(data) else data
+    val Q = if(doWhitenData) MatrixFunction.whiteningMatrix(data) else DenseMatrix.eye[Double](dim)
+    val X = if(doWhitenData) Q*data else data
 
+    /** Rotation to make the whitened data independent.*/
     val rot:Rotation = if(doParallelSearch)
                             findOptimalRotationPar(verbose)
                        else
                             findOptimalRotation(verbose)
-
+    /** Matrix B such that S=B*X is the sample of the independent components: since
+      * Z=WY=WQX has independent components, we can take B = WQ.
+      */
+    val demixingMatrix:DenseMatrix[Double] = rot.rotationMatrix*Q
 
     /**
-      * Performs complete grid search over [[nAngles]] equidistant angles in [-pi/4,pi/4] to find the optimal angle phi for
-      * the Jacobi rotation J(i,j,phi) for each pair of coordinates (i,j) and  produces the demixing matrix
+      * Performs complete grid search over [[nAngles]] equidistant angles in [-pi/4,pi/4] to find the optimal angle phi
+      * for the Jacobi rotation J(i,j,phi) for each pair of coordinates (i,j) and  produces the demixing matrix
       * as product of the optimal Jacobi rotations. Sequential version.
       */
-    def findOptimalRotation(vrbose:Boolean):Rotation = {
+    private def findOptimalRotation(vrbose:Boolean):Rotation = {
 
         if(vrbose) System.out.println("\nRadicalICA: computing optimal rotation.")
         var rot = new Rotation(dim)
 
-        // workspace, data will be modified in place by Jacoby rotations
-        val X:DenseMatrix[Double] = whiteData.copy
         // entropies = entropy(row_i(X))
         val entropies = new DenseVector[Double](dim)
         (0 until dim).map(i => entropies(i) = entropyEstimator(X(i,::).t))
@@ -162,14 +165,12 @@ class RadicalICA(
       * angle phi for the Jacobi rotation J(i,j,phi) for each pair of coordinates (i,j) and  produces the demixing
       * matrix as product of the optimal Jacobi rotations, parallelized version.
       */
-    def findOptimalRotationPar(vrbose:Boolean):Rotation = {
+    private def findOptimalRotationPar(vrbose:Boolean):Rotation = {
 
         if(vrbose) System.out.println("\nRadicalICA: computing optimal rotation, parallelized.")
         val dPhi = pi/(2*nAngles)           // step width phi_step in [-pi/4,pi/4]
         var rot = new Rotation(dim)
 
-        // workspace, data will be modified in place by Jacoby rotations
-        val X:DenseMatrix[Double] = whiteData.copy
         // entropies = entropy(row_i(X))
         val entropies = new DenseVector[Double](dim)
         (0 until dim).map(i => entropies(i) = entropyEstimator(X(i,::).t))
@@ -193,9 +194,9 @@ class RadicalICA(
                     val row_j:DenseVector[Double] = X(j,::).t      // row_j(X)
 
                     // parallelize on angle search
-                    val nThread: Int = Runtime.getRuntime().availableProcessors();
+                    val nThread: Int = Runtime.getRuntime().availableProcessors()
                     val futures = ListBuffer.empty[Future[(Double,Double)]]
-                    for(p <- (0 until nThread)){
+                    for(p <- 0 until nThread){
 
                         futures += parallelAngleSearch(i,j,dPhi,p,nThread,X,entropies)
                     }
@@ -347,11 +348,11 @@ object RadicalICA {
         val dim = data.rows
         val paddedData = DenseMatrix.zeros[Double](dim,nPad*nSample)
 
-        var row=0;
+        var row=0
         while(row<dim){
-            var col=0;
+            var col=0
             while(col<nPad*nSample){
-                paddedData(row,col)=data(row,col%nSample)+sigma*rnorm.draw();
+                paddedData(row,col)=data(row,col%nSample)+sigma*rnorm.draw()
                 col+=1
             }
             row+=1
