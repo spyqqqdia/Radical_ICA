@@ -2,8 +2,8 @@ package org.scalanlp.radical
 
 
 
-import breeze.linalg.{Axis, DenseMatrix, DenseVector, eigSym, sum, svd, max => bn_max}
-import breeze.numerics.{abs => bn_abs, sqrt => bn_sqrt}
+import breeze.linalg.{DenseMatrix, DenseVector, sum, max => bn_max}
+import breeze.numerics.{abs => bn_abs}
 
 
 

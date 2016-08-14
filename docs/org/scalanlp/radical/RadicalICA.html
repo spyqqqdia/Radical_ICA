@@ -48,20 +48,23 @@ each item in the whitened sample is multiplied nPad times and then a small rando
 drawn independently from N(0,sigma²) in each coordinate is added to it.</p><p>This means that the sample distribution is convolved with the multinormal distribution N(0,sigma²I),
 where I is the identity matrix of the same dimension as the data.
 This smooths over sample idiosyncracies which can lead to spurious minima in the contrast function,
-see docs/RADICAL_ICA.pdf, p3, section 3).</p><p>Let XX denote the padded data and Y=QXX the whitened data sample, where Q is an invertible matrix such that
+see docs/RADICAL_ICA.pdf, p3, section 3).</p><p>Let pX denote the padded data and Y=QpX the whitened data sample, where Q is an invertible matrix such that
 cov(Y)=I, the identity matrix (the augmented data matrix XX is of full rank with probability one).</p><p>The algorithm now looks for a _rotation_ W such that the vector Z=WY has independent components.
 To find such W it minimizes a contrast function F=F(W) which is the Kullback-Leibler distance of
 the empirical distribution of Z from the product of the marginal distributions (distance from independence).
 It can be shown that</p><p>   F(Y) = const + sum_i entropy(Y_i),</p><p>where Y_i denotes the i-th coordinate of the random vector Y.
 Thus the algorithm tries to find the rotation W such that Y=WX minimizes the sum of the entropies
 H_i=H(Y_i)=entropy(Y_i).
-Note that the Y_i-sample is the the i-th row of the data matrix Y.</p><p>The algorithm needs samples of large size (10000+). It is left to you to pad the data to this size using the
-function <a href="DataGenerator$.html#smoothMultiDimensionalData(sample:breeze.linalg.DenseMatrix[Double],nPad:Int,sigma:Double):breeze.linalg.DenseMatrix[Double]" class="extmbr" name="org.scalanlp.radical.DataGenerator#smoothMultiDimensionalData">DataGenerator.smoothMultiDimensionalData</a>. The reason this is not built into the algorithm is that it
-interferes with some tests.</p><p>Currently the demixing matrix B is not computed, only the optimal rotation W. This will soon be
-rectified. You can get around this for now by whitening the data yourself Y = QX. Then Z=WY, thus inv(W)Z=Y=QX
-and so
-                              X = inv(Q)inv(W)Z = inv(Q)W'Z,</p><p> where Z has &quot;independent&quot; components and so we can take S=Z and B=inv(Q)W' with the prime denoting
- transposition as usual.</p></div><div class="toggleContainer block">
+Note that the Y_i-sample is the the i-th row of the data matrix Y.</p><p>The algorithm needs samples of large size (10000+). The usual implementation automatically pads the data and then
+whitens the resulting sample. This procedure interferes with some of our tests.</p><p>The tests rotate a set of independent signals by a given rotation U and check if the rotation V computed by the
+algorithm reverses the rotation U. In general one can only guarantee that UV and VU must be permutation matrices.
+If U is a product of Jacobi rotations J in non interacting (disjoint) coordinate pairs (i,j) (and thus necessarily
+fairly sparse), then V has to reverse the rotations J one by one and some tests check this behaviour.</p><p>For some of the tests to work properly the rotation U has to be applied after padding and whitening.
+For this reason we include a switch to turn off whitening. It is then assumed that the data are white.
+Likewise it is left to you to pad the data sample to reasonable size using the function
+DataGenerator.smoothMultiDimensionalData. In this fashion we can run the tests on large white test data samples
+which are not padded.
+</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
@@ -114,8 +117,8 @@ and so
       </span>
       </h4>
       <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">data</dt><dd class="cmt"><p>sample of multidimensional distribution, each column is one random value of the
-             distribution. Samplesize needs to be 10000+, use <a href="DataGenerator$.html#smoothMultiDimensionalData(sample:breeze.linalg.DenseMatrix[Double],nPad:Int,sigma:Double):breeze.linalg.DenseMatrix[Double]" class="extmbr" name="org.scalanlp.radical.DataGenerator#smoothMultiDimensionalData">DataGenerator.smoothMultiDimensionalData</a>
-             to increase the sample size if needed.</p></dd><dt class="param">nAngles</dt><dd class="cmt"><p>number of equidistant grid points in [-pi/4,pi/4] scanned for optimal angles alpha of the
+             distribution, each row a sample of a coordinate variable. Sample size needs to be 10000+,
+             use <a href="DataGenerator$.html#smoothMultiDimensionalData(sample:breeze.linalg.DenseMatrix[Double],nPad:Int,sigma:Double):breeze.linalg.DenseMatrix[Double]" class="extmbr" name="org.scalanlp.radical.DataGenerator#smoothMultiDimensionalData">DataGenerator.smoothMultiDimensionalData</a> to increase the sample size if needed.</p></dd><dt class="param">nAngles</dt><dd class="cmt"><p>number of equidistant grid points in [-pi/4,pi/4] scanned for optimal angles alpha of the
                Jacobi rotations (100 should be enough).</p></dd><dt class="param">entropyEstimator</dt><dd class="cmt"><p>estimator for the marginal entropies. Provided are
      <a href="MathTools$.html#entropyEstimatorVasicek(m:Int):breeze.linalg.DenseVector[Double]=&gt;Double" class="extmbr" name="org.scalanlp.radical.MathTools#entropyEstimatorVasicek">MathTools.entropyEstimatorVasicek</a>, <a href="MathTools$.html#entropyEstimatorEmpiricalAdapted(nBins:Int):breeze.linalg.DenseVector[Double]=&gt;Double" class="extmbr" name="org.scalanlp.radical.MathTools#entropyEstimatorEmpiricalAdapted">MathTools.entropyEstimatorEmpiricalAdapted</a> and
      <a href="MathTools$.html#entropyEstimatorEmpiricalFast:breeze.linalg.DenseVector[Double]=&gt;Double" class="extmbr" name="org.scalanlp.radical.MathTools#entropyEstimatorEmpiricalFast">MathTools.entropyEstimatorEmpiricalFast</a>
@@ -199,6 +202,32 @@ strongly clustered data (spiky densities).
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li name="org.scalanlp.radical.RadicalICA#Q" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Q:breeze.linalg.DenseMatrix[Double]"></a>
+      <a id="Q:DenseMatrix[Double]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">Q</span><span class="result">: <span class="extype" name="breeze.linalg.DenseMatrix">DenseMatrix</span>[<span class="extype" name="scala.Double">Double</span>]</span>
+      </span>
+      </h4>
+      
+    </li><li name="org.scalanlp.radical.RadicalICA#X" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="X:breeze.linalg.DenseMatrix[Double]"></a>
+      <a id="X:DenseMatrix[Double]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">X</span><span class="result">: <span class="extype" name="breeze.linalg.DenseMatrix">DenseMatrix</span>[<span class="extype" name="scala.Double">Double</span>]</span>
+      </span>
+      </h4>
+      
     </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
@@ -244,9 +273,23 @@ strongly clustered data (spiky densities).
       </span>
       </h4>
       <p class="shortcomment cmt">sample of multidimensional distribution, each column is one random value of the
-             distribution.</p><div class="fullcomment"><div class="comment cmt"><p>sample of multidimensional distribution, each column is one random value of the
-             distribution. Samplesize needs to be 10000+, use <a href="DataGenerator$.html#smoothMultiDimensionalData(sample:breeze.linalg.DenseMatrix[Double],nPad:Int,sigma:Double):breeze.linalg.DenseMatrix[Double]" class="extmbr" name="org.scalanlp.radical.DataGenerator#smoothMultiDimensionalData">DataGenerator.smoothMultiDimensionalData</a>
-             to increase the sample size if needed.</p></div></div>
+             distribution, each row a sample of a coordinate variable.</p><div class="fullcomment"><div class="comment cmt"><p>sample of multidimensional distribution, each column is one random value of the
+             distribution, each row a sample of a coordinate variable. Sample size needs to be 10000+,
+             use <a href="DataGenerator$.html#smoothMultiDimensionalData(sample:breeze.linalg.DenseMatrix[Double],nPad:Int,sigma:Double):breeze.linalg.DenseMatrix[Double]" class="extmbr" name="org.scalanlp.radical.DataGenerator#smoothMultiDimensionalData">DataGenerator.smoothMultiDimensionalData</a> to increase the sample size if needed.</p></div></div>
+    </li><li name="org.scalanlp.radical.RadicalICA#demixingMatrix" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="demixingMatrix:breeze.linalg.DenseMatrix[Double]"></a>
+      <a id="demixingMatrix:DenseMatrix[Double]"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">demixingMatrix</span><span class="result">: <span class="extype" name="breeze.linalg.DenseMatrix">DenseMatrix</span>[<span class="extype" name="scala.Double">Double</span>]</span>
+      </span>
+      </h4>
+      <p class="shortcomment cmt">Matrix B such that S=B*X is the sample of the independent components: since
+Z=WY=WQX has independent components, we can take B = WQ.</p>
     </li><li name="org.scalanlp.radical.RadicalICA#dim" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
       <a id="dim:Int"></a>
       <a id="dim:Int"></a>
@@ -351,39 +394,6 @@ strongly clustered data (spiky densities).
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="org.scalanlp.radical.RadicalICA#findOptimalRotation" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
-      <a id="findOptimalRotation(vrbose:Boolean):org.scalanlp.radical.Rotation"></a>
-      <a id="findOptimalRotation(Boolean):Rotation"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">findOptimalRotation</span><span class="params">(<span name="vrbose">vrbose: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="Rotation.html" class="extype" name="org.scalanlp.radical.Rotation">Rotation</a></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Performs complete grid search over <a href="#nAngles:Integer" class="extmbr" name="org.scalanlp.radical.RadicalICA#nAngles">nAngles</a> equidistant angles in [-pi/4,pi/4] to find the optimal angle phi for
-the Jacobi rotation J(i,j,phi) for each pair of coordinates (i,j) and  produces the demixing matrix
-as product of the optimal Jacobi rotations.</p><div class="fullcomment"><div class="comment cmt"><p>Performs complete grid search over <a href="#nAngles:Integer" class="extmbr" name="org.scalanlp.radical.RadicalICA#nAngles">nAngles</a> equidistant angles in [-pi/4,pi/4] to find the optimal angle phi for
-the Jacobi rotation J(i,j,phi) for each pair of coordinates (i,j) and  produces the demixing matrix
-as product of the optimal Jacobi rotations. Sequential version.
-</p></div></div>
-    </li><li name="org.scalanlp.radical.RadicalICA#findOptimalRotationPar" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="findOptimalRotationPar(vrbose:Boolean):org.scalanlp.radical.Rotation"></a>
-      <a id="findOptimalRotationPar(Boolean):Rotation"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">findOptimalRotationPar</span><span class="params">(<span name="vrbose">vrbose: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result">: <a href="Rotation.html" class="extype" name="org.scalanlp.radical.Rotation">Rotation</a></span>
-      </span>
-      </h4>
-      <p class="shortcomment cmt">Performs complete grid search over <a href="#nAngles:Integer" class="extmbr" name="org.scalanlp.radical.RadicalICA#nAngles">nAngles</a> equidistant angles in [-pi/4,pi/4] to find the optimal
-angle phi for the Jacobi rotation J(i,j,phi) for each pair of coordinates (i,j) and  produces the demixing
-matrix as product of the optimal Jacobi rotations, parallelized version.</p>
     </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="getClass():Class[_]"></a>
       <a id="getClass():Class[_]"></a>
@@ -541,7 +551,7 @@ i.e. K equidistant points. The future number p searches all angles</p><p>   phi 
         <span class="name">rot</span><span class="result">: <a href="Rotation.html" class="extype" name="org.scalanlp.radical.Rotation">Rotation</a></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Rotation to make the whitened data independent.</p>
     </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
       <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
       <a id="synchronized[T0](⇒T0):T0"></a>
@@ -638,19 +648,6 @@ i.e. K equidistant points. The future number p searches all angles</p><p>   phi 
     </span>)</span>
               
         </dd></dl></div>
-    </li><li name="org.scalanlp.radical.RadicalICA#whiteData" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
-      <a id="whiteData:breeze.linalg.DenseMatrix[Double]"></a>
-      <a id="whiteData:DenseMatrix[Double]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">whiteData</span><span class="result">: <span class="extype" name="breeze.linalg.DenseMatrix">DenseMatrix</span>[<span class="extype" name="scala.Double">Double</span>]</span>
-      </span>
-      </h4>
-      
     </li></ol>
             </div>
 

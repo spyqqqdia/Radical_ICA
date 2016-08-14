@@ -101,3 +101,18 @@ Speed up the Vasicek estimator using a bin sort. Try coalescing bins until they 
 
 Maybe the naive should check the standard deviation of the bin counts to detect clustering and then
 increase the number of bins (say by a factor of four) at least once to adapt itself a little bit.
+
+#-----------------------------------------------------------------------------------
+2016-08-05:|
+-------------
+
+In case the data are not whitened X must _copy_ the data or else the data will be modified by the algorithm.
+We should also move X into the functions computing the rotation, there is no point in having X as a permanent
+field.
+
+#-----------------------------------------------------------------------------------
+2016-08-13:|
+-------------
+
+Write some functions in the class DataGenerator which produce more general lists of coordinate distributions
+so that we can do more interesting tests (in particular make the dimension = size of list) variable.

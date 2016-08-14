@@ -1,8 +1,7 @@
 package org.scalanlp.radical
 
 
-import scala.math.abs
-import breeze.linalg.{DenseMatrix, DenseVector}
+import breeze.linalg.{max,DenseMatrix, DenseVector}
 import breeze.numerics._
 
 
@@ -238,5 +237,15 @@ object MathTools {
             if(a < min) min=a else if (a>max) max=a
         }
         (min,max)
+    }
+    /** Check if U'U yields the identity matrix I.
+      * @return max(|U'U-I|) < tolerance.*/
+    def isOrthogonal(U:DenseMatrix[Double],tolerance:Double): Boolean = {
+
+        assert(U.rows==U.cols,"Matrix U is not square.\n")
+        val I = DenseMatrix.eye[Double](U.rows)
+        val C = U.t * U
+        val diff = max(abs(C-I))
+        diff < tolerance
     }
 }

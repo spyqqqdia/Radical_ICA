@@ -34,10 +34,10 @@ object Runner {
         // matrixFunctionTests.whiteningTest()
         // MathTests.entropyTest()
         // MathTests.testEntropySpikyDist(10000)
-        MathTests.testSymmetry(100)
+        // MathTests.testSymmetry(100)
 
 
-        val dim = 10
+        val dim = 3
         val sampleSize = 40000
         val precision = 0.08
         val doVasicek = true
@@ -47,7 +47,8 @@ object Runner {
 
 
         val coordinateDistributions = DataGenerator.distributionList
-        //radICATests.testRadical(coordinateDistributions,sampleSize,doParallelSearch,doVasicek,precision,verbose)
+        //radICATests.testRadicalSparse(coordinateDistributions,sampleSize,doParallelSearch,doVasicek,precision,verbose)
+        radICATests.testRadicalDense(coordinateDistributions,sampleSize,doParallelSearch,doVasicek,precision,verbose)
 
     }
 }

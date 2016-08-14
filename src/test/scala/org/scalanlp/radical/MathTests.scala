@@ -280,8 +280,8 @@ object MathTests {
 
         val A = DenseMatrix.rand[Double](m,m)
         print("Testing symmetry of C=A*At: ")
-        val S = A.t*A
-        val diff = max(abs(S-S.t))
+        val C = A.t*A
+        val diff = max(abs(C-C.t))
         print("||C-C.t||_oo = "+diff)
     }
 

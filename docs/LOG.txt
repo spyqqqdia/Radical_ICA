@@ -169,6 +169,18 @@ Added BiExponential distribution.
 Reorganized RadicalICATests based on samples provided by DataGenerator. New test with arbitrary
 distributions in the coordinates.
 
+#-----------------------------------------------------------------------------------
+2016-08-13:|
+-------------
+
+Added some tests of ICA where white, independent sources are rotated with a dense rotation matrix U.
+Checks if the demixing matrix V (which here coincides with the rotation matrix found ny the algorithm)
+has the property that VU is a permutation matrix.
+
+Works in dimension 5 on the standard list of coordinate distributions.
+
+
+
 
 
 
