@@ -45,7 +45,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
   * whitens the resulting sample. This procedure interferes with some of our tests.
   *
   * The tests rotate a set of independent signals by a given rotation U and check if the rotation V computed by the
-  * algorithm reverses the rotation U. In general one can only guarantee that UV and VU must be permutation matrices.
+  * algorithm reverses the rotation U. In general one can only guarantee VU must be permutation matrix.
   * If U is a product of Jacobi rotations J in non interacting (disjoint) coordinate pairs (i,j) (and thus necessarily
   * fairly sparse), then V has to reverse the rotations J one by one and some tests check this behaviour.
   *

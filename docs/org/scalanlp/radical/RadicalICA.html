@@ -57,7 +57,7 @@ Thus the algorithm tries to find the rotation W such that Y=WX minimizes the sum
 H_i=H(Y_i)=entropy(Y_i).
 Note that the Y_i-sample is the the i-th row of the data matrix Y.</p><p>The algorithm needs samples of large size (10000+). The usual implementation automatically pads the data and then
 whitens the resulting sample. This procedure interferes with some of our tests.</p><p>The tests rotate a set of independent signals by a given rotation U and check if the rotation V computed by the
-algorithm reverses the rotation U. In general one can only guarantee that UV and VU must be permutation matrices.
+algorithm reverses the rotation U. In general one can only guarantee VU must be permutation matrix.
 If U is a product of Jacobi rotations J in non interacting (disjoint) coordinate pairs (i,j) (and thus necessarily
 fairly sparse), then V has to reverse the rotations J one by one and some tests check this behaviour.</p><p>For some of the tests to work properly the rotation U has to be applied after padding and whitening.
 For this reason we include a switch to turn off whitening. It is then assumed that the data are white.
