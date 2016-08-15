@@ -441,8 +441,8 @@ matrix U is dense.</p><p>Because the data are white the demixing matrix coincide
 algorithm. It is not uniquely determined but the product VU with the rotation matrix U applied to
 the independent data sample with  must be a permutation matrix. This condition is checked.</p><p>Note that VU is the transformation which first rotates the independent sources with U, then reverses this
 rotation with the rotation V found by the Radical algorithm. If the algorithm works perfectly this
-transformation can only permute coordinates. The same is not true of the transformation UV, i.e. the
-matrix UV need not be a permutation matrix.</p><p>The algorithm is not expected to work in large dimensions if the independent source are rotated with
+transformation can only permute coordinates or reverse their sign. I.e. abs(VU) (component wise) must be a
+permutation matrix.</p><p>The same is not true of the transformation UV.</p><p>The algorithm is not expected to work in large dimensions if the independent source are rotated with
 a dense rotation matrix. Thus keep the dimension low. In verbose mode we print the product VU.
 </p></div><dl class="paramcmts block"><dt class="param">coordinateDistributions</dt><dd class="cmt"><p>list of dim distributions assigned to components of random vector in order,
      see <a href="DataGenerator$.html#rotatedWhitenedSample(coordinateDistributions:List[breeze.stats.distributions.ContinuousDistr[Double]],sampleSize:Int,sigma:Double,rot:org.scalanlp.radical.Rotation):breeze.linalg.DenseMatrix[Double]" class="extmbr" name="org.scalanlp.radical.DataGenerator#rotatedWhitenedSample">DataGenerator.rotatedWhitenedSample</a>. The size of this list is the data dimension.</p></dd><dt class="param">sampleSize</dt><dd class="cmt"><p>size of padded sample (unpadded size will be sampleSize/40).</p></dd><dt class="param">entropyEstimator</dt><dd class="cmt"><p>estimator for the marginal entropies. Provided are

@@ -3,6 +3,8 @@ package org.scalanlp.radical
 import breeze.linalg.{DenseMatrix, DenseVector}
 import breeze.stats.distributions._
 
+import scala.collection.mutable.ListBuffer
+
 
 /**
   * Created by oar on 7/3/16.
@@ -14,16 +16,29 @@ import breeze.stats.distributions._
   */
 object DataGenerator {
 
+    val rng = scala.util.Random
     /** N(0,1) generator.*/
     val rnorm = new breeze.stats.distributions.Gaussian(0,1)
 
     /** Standard list of distributions for the coordinates. Some of these are moderately somewhat clustered:
-      *
+      * Uniform(0,1), Exponential(5), Gaussian(0,0.25), Gamma(2,2), Gamma(1,2), BiExponential(10)
       **/
     val distributionList = List[ContinuousDistr[Double]](
 
         Uniform(0,1), Exponential(5), Gaussian(0,0.25), Gamma(2,2), Gamma(1,2), BiExponential(10)
     )
+
+    /**List n of distributions randomly drawn (with replacement) from the standard list [[distributionList]]. */
+    def randomDistributionList(n:Integer): List[ContinuousDistr[Double]] = {
+
+        val dList:ListBuffer[ContinuousDistr[Double]] = ListBuffer.empty[ContinuousDistr[Double]]
+        for(i <- 0 until n){
+
+            val j = rng.nextInt(distributionList.size)
+            dList += distributionList(j)
+        }
+        dList.toList
+    }
 
     /** Repeat each entry in sample nPad ties while adding a N(0,sigma²) draw to it.
       *

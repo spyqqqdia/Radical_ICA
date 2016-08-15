@@ -3,7 +3,7 @@ package org.scalanlp.radical
 
 
 import breeze.linalg.{DenseMatrix, DenseVector, sum, max => bn_max}
-import breeze.numerics.{abs => bn_abs}
+import breeze.numerics.abs
 
 
 
@@ -35,16 +35,40 @@ object Utils {
     }
 
     /**
-      * Checks if A is a permutation matrix using the following criterion:
-      * the maximal element of each row as well as the sum of all absolute values
-      * of row entries differ from one by at most tol and the same is true of all
-      * columns of A
+      * Checks if A is a permutation matrix.
+      *
+      * @param tol tolerated deviation of entries from 0 or 1.
       */
      def isPermutationMatrix(A:DenseMatrix[Double], tol:Double):Boolean = {
 
         var res = true
-        (0 until A.rows).map(i => res &= bn_abs(bn_max(A(i,::))-1.0)<tol && bn_abs(sum(bn_abs(A(i,::)))-1.0)<tol)
-        (0 until A.cols).map(j => res &= bn_abs(bn_max(A(::,j))-1.0)<tol && bn_abs(sum(bn_abs(A(::,j)))-1.0)<tol)
+        val m = A.rows
+        assert(m==A.cols,"A must be a square matrix")
+        var a=0  // number of entries close to 1
+        var b=0  // number of entries close to 0
+
+        // check that each row has exaclty one 1.0, all other 0.0 entries
+        for(i <- 0 until m){
+
+            a=0; b=0
+            for(j <- 0 until m) {
+                if (abs(A(i,j) - 1.0) < tol) a += 1
+                if (abs(A(i,j)) < tol) b += 1
+            }
+        }
+        res &= (a==1) & (b==m-1)
+        if(!res) return false;
+
+        // now check the columns
+        for(j <- 0 until m){
+
+            a=0; b=0
+            for(i <- 0 until m) {
+                if (abs(A(i,j) - 1.0) < tol) a += 1
+                if (abs(A(i,j)) < tol) b += 1
+            }
+        }
+        res &= (a==1) & (b==m-1)
         res
     }
 }

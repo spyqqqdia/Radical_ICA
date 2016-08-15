@@ -1,7 +1,7 @@
 package org.scalanlp.radical
 
 
-
+import breeze.numerics.abs
 import breeze.linalg.{DenseMatrix, DenseVector}
 import breeze.stats.distributions.{ContinuousDistr,Uniform}
 import scala.collection.mutable.ListBuffer
@@ -226,8 +226,10 @@ class RadicalICATests {
       *
       * Note that VU is the transformation which first rotates the independent sources with U, then reverses this
       * rotation with the rotation V found by the Radical algorithm. If the algorithm works perfectly this
-      * transformation can only permute coordinates. The same is not true of the transformation UV, i.e. the
-      * matrix UV need not be a permutation matrix.
+      * transformation can only permute coordinates or reverse their sign. I.e. abs(VU) (component wise) must be a
+      * permutation matrix.
+      *
+      * The same is not true of the transformation UV.
       *
       * The algorithm is not expected to work in large dimensions if the independent source are rotated with
       * a dense rotation matrix. Thus keep the dimension low. In verbose mode we print the product VU.
@@ -271,16 +273,15 @@ class RadicalICATests {
         Timer.stop
         System.out.println(Timer.report)
 
-        val VU:DenseMatrix[Double] = V*U;
+        val abs_VU:DenseMatrix[Double] = abs(V*U);
 
         // did all of them pass
-        val pass = Utils.isPermutationMatrix(VU,tolerance)
+        val pass = Utils.isPermutationMatrix(abs_VU,tolerance)
 
         println((if(pass) "Test passed" else "Test failed")+" with precision "+tolerance+".")
         if(verbose){
-            System.out.println("\nMatrix UV, should be a permuation matrix:")
-            System.out.print(MathTools.round(VU,3))
-            assert(MathTools.isOrthogonal(VU,1e-13))
+            System.out.println("\nMatrix abs(VU), should be a permuation matrix:")
+            System.out.print(MathTools.round(abs_VU,3))
         }
         pass
     }
@@ -305,7 +306,7 @@ class RadicalICATests {
 
         var msg = "\nData X with independent coordinates and assigned distribution in each coordinate\n"
         msg += "are whitended and rotated with dense rotation matrix U.\n"
-        msg += "If V is the demixing rotation computed by Radical, then UV must be a permutation matrix.\n"
+        msg += "If V is the demixing rotation computed by Radical, then abs(VU) must be a permutation matrix.\n"
         msg += "Will check this now."
         System.out.println(msg+"\n")
 

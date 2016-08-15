@@ -179,6 +179,14 @@ has the property that VU is a permutation matrix.
 
 Works in dimension 5 on the standard list of coordinate distributions.
 
+#-----------------------------------------------------------------------------------
+2016-08-15:|
+-------------
+
+Corrected errors in comments. Added function DataGenerator.randomDistributionList yielding lists of distributions
+of arbitrary length (for the coordinates) to be able to test with this in arbitrary dimensions.
+Cleaned up Utils.isPermutationMatrix.
+
 
 
 

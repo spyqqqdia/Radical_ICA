@@ -37,7 +37,7 @@ object Runner {
         // MathTests.testSymmetry(100)
 
 
-        val dim = 3
+        val dim = 10
         val sampleSize = 40000
         val precision = 0.08
         val doVasicek = true
@@ -46,7 +46,8 @@ object Runner {
         // radICATests.testCube(dim,sampleSize,doParallelSearch,doVasicek,precision,verbose)
 
 
-        val coordinateDistributions = DataGenerator.distributionList
+        //val coordinateDistributions = DataGenerator.distributionList
+        val coordinateDistributions = DataGenerator.randomDistributionList(dim)
         //radICATests.testRadicalSparse(coordinateDistributions,sampleSize,doParallelSearch,doVasicek,precision,verbose)
         radICATests.testRadicalDense(coordinateDistributions,sampleSize,doParallelSearch,doVasicek,precision,verbose)
 
